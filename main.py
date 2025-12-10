@@ -46,6 +46,4 @@ async def start(client, m: Message):
         )       
 
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(db.connect())  # دیتابیس connect
     app.run()                  # تمام handlerها فعال می‌شوند
