@@ -16,9 +16,13 @@ async def start(_, message):
     await message.reply("سلام! من ربات تستی هستم. چطور می‌تونم کمکت کنم؟")
 
 async def main():
+    print("Starting bot...")
     await app.start()
-    await asyncio.Event().wait()   # ربات همیشه روشن می‌ماند
+    print("Bot started.")
+    await asyncio.Event().wait() 
+
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
