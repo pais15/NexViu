@@ -21,7 +21,8 @@ async def start(client, m: Message):
             await process_url_command(m)
             await m.reply(
                 '''🌟 *خوش اومدی به NexViu!*\n\n🚀 *آماده‌ای کانالت رو بترکونی؟*\n👇 *یه گزینه انتخاب کن و شروع کنیم!*''',
-                reply_markup=await get_markup(m.chat.id)
+                reply_markup=await get_markup(m.chat.id),
+                parse_mode='Markdown'
             )
         else:
             # اول select کامل را await کن
@@ -31,18 +32,21 @@ async def start(client, m: Message):
 
             if move is not None:
                 await m.reply(
-                    '''⚠️ *یه لحظه صبر کن!*\n\n🔄 *اول کار قبلیتو تموم کن!*'''
+                    '''⚠️ *یه لحظه صبر کن!*\n\n🔄 *اول کار قبلیتو تموم کن!*''',
+                    parse_mode='Markdown'
                 )
             else:
                 name = name if name else "دوست عزیز"
                 await m.reply(
                     f'''🌞 *سلام {name}!*\n\n🚀 *امروز چه برنامه‌ای داری؟*\n👇 *یه گزینه انتخاب کن!*''',
-                    reply_markup=await get_markup(m.chat.id)
+                    reply_markup=await get_markup(m.chat.id),
+                    parse_mode='Markdown'
                 )
     else:
         await m.reply(
             '''👑 *سلام رئیس NexViu!*\n\n🔧 *آماده مدیریت کاربرا و تنظیم ربات؟*\n🚀 *بزن بریم!*''',
-            reply_markup=admin_markup
+            reply_markup=admin_markup,
+            parse_mode='Markdown'
         )
 
 
