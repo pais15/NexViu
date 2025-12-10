@@ -45,17 +45,7 @@ async def start(client, m: Message):
             reply_markup=admin_markup,
         )       
 
-from pyrogram import idle
-
-async def main():
-    await db.connect()  # اتصال دیتابیس
-    await app.start()   # استارت ربات
-    print("Bot started...")
-    await idle()        # منتظر بماند تا Ctrl+C
-    await app.stop()    # توقف ربات
-
 if __name__ == "__main__":
     import asyncio
-    asyncio.run(main())  # event loop ساخته و اجرا می‌شود
-
- 
+    asyncio.run(db.connect())  # دیتابیس connect
+    app.run()                  # تمام handlerها فعال می‌شوند
