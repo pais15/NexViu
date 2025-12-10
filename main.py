@@ -46,5 +46,8 @@ async def start(client, m: Message):
         )
 
 
+async def main():
+    await db.connect()
+    
 if __name__ == "__main__":
-    app.run()
+    app.run(main())

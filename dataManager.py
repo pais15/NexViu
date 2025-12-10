@@ -48,8 +48,6 @@ class Database:
             self._log(f"INSERT {table}: {data}")
             return dict(row)
 
-    from typing import Optional, List, Dict, Any
-
     async def select(
         db, 
         table: str, 
@@ -100,7 +98,6 @@ class Database:
         async with db.pool.acquire() as conn:
             rows = await conn.fetch(query, *values)
             return [dict(row) for row in rows]
-
 
     async def update(self, table: str, data: dict, where: dict) -> Optional[Dict[str, Any]]:
         set_keys = list(data.keys())
