@@ -1,7 +1,4 @@
-# database.py
-import asyncpg
-from typing import Optional, List, Dict, Any
-import logging
+from imports import *
 
 logger = logging.getLogger(__name__)
 

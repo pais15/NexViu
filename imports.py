@@ -1,8 +1,7 @@
 from pyrogram import Client, filters,  idle
-import asyncio
+import asyncio, os, asyncpg, logging
+from typing import Optional, List, Dict, Any
 from dotenv import load_dotenv
-import os
-from dataManager import *
 from pyrogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton,
     CallbackQuery, Message
