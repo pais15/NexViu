@@ -1,7 +1,6 @@
-from pyrogram import Client, filters
+from pyrogram import Client, filters, idle
 from dotenv import load_dotenv
-import asyncio, os
-from pyrogram import idle
+import os
 
 load_dotenv()
 
@@ -9,21 +8,22 @@ app = Client(
     "NexViu",
     api_id=int(os.getenv("API_ID")),
     api_hash=os.getenv("API_HASH"),
-    bot_token=os.getenv("TOKEN")
+    bot_token=os.getenv("TOKEN"),
+    workdir="/app", 
+    in_memory=False
 )
 
-@app.on_message(filters.command("start"))
-async def start(_, message):
-    await message.reply("سلام! من ربات تستی هستم. چطور می‌تونم کمکت کنم؟")
+@app.on_message(filters.command("start") & filters.private)
+async def start(client, message):
+    await message.reply("سلام! حالا دیگه هیچ وقت فلود نمی‌شم 🎉")
 
 async def main():
-    print("در حال راه‌اندازی ربات...")
+    print("در حال استارت ربات...")
     await app.start()
-    print("ربات در حال اجراست...")
+    print("ربات با موفقیت استارت شد و آنلاین است!")
     await idle()
-    print("در حال توقف ربات...")
+    print("در حال خاموش کردن ربات...")
     await app.stop()
-    print("ربات متوقف شد.")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    app.run(main()) 
