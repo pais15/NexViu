@@ -1,5 +1,8 @@
 from pyrogram import Client, filters
+from dotenv import load_dotenv
 import asyncio, os
+
+load_dotenv()
 
 app = Client(
     "NexViu",
@@ -18,3 +21,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
