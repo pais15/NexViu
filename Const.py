@@ -2,9 +2,9 @@ from dataManager import *
 
 app = Client(
     "NexViu",
+    bot_token=os.getenv("BOT_TOKEN"),
     api_id=int(os.getenv("API_ID")),
     api_hash=os.getenv("API_HASH"),
-    bot_token=os.getenv("BOT_TOKEN"),
     workdir="/app", 
     in_memory=False
 )
