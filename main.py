@@ -50,7 +50,7 @@ async def main():
     await db.connect()   
     await app.start()      
     print("Bot started...")
-    await app.idle()       
+    await idle()       
     await app.stop()       
 
 if __name__ == "__main__":
