@@ -1,6 +1,5 @@
-from pyrogram import Client, filters, idle
-from dotenv import load_dotenv
-import os
+from pyrogram import Client, filters
+from imports import *
 
 load_dotenv()
 
