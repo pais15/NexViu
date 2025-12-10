@@ -46,5 +46,12 @@ async def start(client, m: Message):
         )       
 
 if __name__ == "__main__":
-    asyncio.run(db.connect())  # pool ساخته شود
-    app.run() 
+    import nest_asyncio
+    nest_asyncio.apply()  # اگر داخل notebook یا environment خاصی هستی
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    
+    loop.run_until_complete(db.connect())  # اتصال دیتابیس
+    app.run()  # حالا بدون ارور اجرا می‌شود
+ 
