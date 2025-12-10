@@ -17,13 +17,6 @@ app = Client(
 async def start(client, message):
     await message.reply("سلام! حالا دیگه هیچ وقت فلود نمی‌شم 🎉")
 
-async def main():
-    print("در حال استارت ربات...")
-    await app.start()
-    print("ربات با موفقیت استارت شد و آنلاین است!")
-    await idle()
-    print("در حال خاموش کردن ربات...")
-    await app.stop()
-
 if __name__ == "__main__":
-    app.run(main()) 
+    app.run() 
+
