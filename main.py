@@ -13,6 +13,7 @@ app = Client(
 
 @app.on_message(filters.command("start"))
 async def start(_, message):
+    print(f"Received /start from user {message.from_user.id}")
     await message.reply("سلام! من ربات تستی هستم. چطور می‌تونم کمکت کنم؟")
 
 async def main():
@@ -24,5 +25,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
