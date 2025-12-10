@@ -43,15 +43,8 @@ async def start(client, m: Message):
         await m.reply(
             '''👑 **سلام رئیس NexViu!**\n\n🔧 **آماده مدیریت کاربرا و تنظیم ربات؟**\n🚀 **بزن بریم!**''',
             reply_markup=admin_markup,
-        )
-
-
-async def main():
-    await db.connect()   
-    await app.start()      
-    print("Bot started...")
-    await idle()       
-    await app.stop()       
+        )       
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(db.connect())  # pool ساخته شود
+    app.run() 
