@@ -47,8 +47,11 @@ async def start(client, m: Message):
 
 
 async def main():
-    await db.connect()
-    app.run()
+    await db.connect()   
+    await app.start()      
+    print("Bot started...")
+    await app.idle()       
+    await app.stop()       
 
 if __name__ == "__main__":
     asyncio.run(main())
