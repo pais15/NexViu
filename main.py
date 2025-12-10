@@ -45,13 +45,17 @@ async def start(client, m: Message):
             reply_markup=admin_markup,
         )       
 
-if __name__ == "__main__":
-    import nest_asyncio
-    nest_asyncio.apply()  # اگر داخل notebook یا environment خاصی هستی
+from pyrogram import idle
 
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    
-    loop.run_until_complete(db.connect())  # اتصال دیتابیس
-    app.run()  # حالا بدون ارور اجرا می‌شود
+async def main():
+    await db.connect()  # اتصال دیتابیس
+    await app.start()   # استارت ربات
+    print("Bot started...")
+    await idle()        # منتظر بماند تا Ctrl+C
+    await app.stop()    # توقف ربات
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())  # event loop ساخته و اجرا می‌شود
+
  
