@@ -1,6 +1,7 @@
 from pyrogram import Client, filters
 from dotenv import load_dotenv
 import asyncio, os
+from pyrogram import idle
 
 load_dotenv()
 
@@ -13,18 +14,13 @@ app = Client(
 
 @app.on_message(filters.command("start"))
 async def start(_, message):
-    print(f"Received /start from user {message.from_user.id}")
     await message.reply("سلام! من ربات تستی هستم. چطور می‌تونم کمکت کنم؟")
 
 async def main():
-    print("Starting bot...")
     await app.start()
-    print("Bot started.")
-    await asyncio.Event().wait() 
-
+    print("ربات با موفقیت استارت شد و در حال polling است...")
+    await idle()
+    await app.stop()
 
 if __name__ == "__main__":
     asyncio.run(main())
-
-
-
