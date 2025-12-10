@@ -47,7 +47,10 @@ async def start(client, m: Message):
 
 
 async def main():
+    await app.start()
     await db.connect()
-    
+    await idle()
+    await db.close()
+
 if __name__ == "__main__":
     app.run(main())
