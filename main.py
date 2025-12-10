@@ -47,11 +47,8 @@ async def start(client, m: Message):
 
 
 async def main():
-    await db.connect()   
-    await app.start()      
-    print("Bot started...")
-    await idle()       
-    await app.stop()       
+    await db.connect()  # pool دیتابیس ساخته می‌شود
+    app.run()           # ربات استارت می‌شود و handlerها فعال هستند
 
 if __name__ == "__main__":
     asyncio.run(main())
