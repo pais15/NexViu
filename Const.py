@@ -60,6 +60,7 @@ def create_move_filter(target_move: str):
         return bool(user_data and user_data[0].get('move') == target_move)
     return filters.create(_f)
 
+
 app = Client(
     "NexViu",
     bot_token=os.getenv("BOT_TOKEN"),
