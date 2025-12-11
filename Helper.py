@@ -1,4 +1,4 @@
-from Const import db
+from Const import db, processed, filters, Message
 import json, jdatetime, traceback, pytz
 from unidecode import unidecode
 from datetime import datetime, timedelta

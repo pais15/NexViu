@@ -15,7 +15,7 @@ def prevent_double_run():
 prevent_double_run()
 
 
-@app.on_message(filters.private & filters.command("start"))
+@app.on_message(filters.private & filters.command("start") & checkSend)
 async def start(client, m: Message):
     m.chat.id = str(m.chat.id)
     if not await db.exists('users', {'userID': m.chat.id}):
@@ -64,7 +64,7 @@ async def start(client, m: Message):
         )
 
 
-@app.on_message(filters.private &  ~filters.command("start") & dont_exists_filter & not_bot)
+@app.on_message(filters.private &  ~filters.command("start") & dont_exists_filter & not_bot & checkSend)
 async def dont_exists(client, m:Message):
     await m.reply(
         '''🎉 **خوش اومدی! ولی...**

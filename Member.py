@@ -33,7 +33,7 @@ async def support_and_guide(client, m: Message):
     await db.update('users', {'move': 'support'}, {'userID': m.chat.id})
 
 
-@app.on_message(exists_filter & filters.regex(r"^💜 درباره NexViu$"))
+@app.on_message(exists_filter & filters.regex(r"^💜 درباره NexViu$") & checkSend)
 async def about_nexviu(client, m: Message):
     await m.reply(HI_MEMBER)
 
