@@ -1,7 +1,7 @@
 from Helper import *
 from Const import *
 
-@app.on_message(filters.private &filters.command("start"))
+@app.on_message(filters.private & filters.command("start"))
 async def start(client, m: Message):
     m.chat.id = str(m.chat.id)
     if m.chat.id != ADMIN:
