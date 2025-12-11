@@ -33,12 +33,6 @@ async def support_and_guide(client, m: Message):
     await db.update('users', {'move': 'support'}, {'userID': m.chat.id})
 
 
-@app.on_message(exists_filter & create_move_filter('support') & (filters.text != "🏠 خانه"))
-async def handle_support_messages(client, m: Message):
-    await m.forward(ADMIN)
-    await m.reply('''✅ **پیامت به پشتیبانی ارسال شد!**\n\nتیم ما در اسرع وقت پاسخ خواهد داد. لطفاً صبور باش! 🙏**''')
-
-
 @app.on_message(exists_filter & (filters.text == "💜 درباره NexViu"))
 async def about_nexviu(client, m: Message):
     await m.reply(HI_MEMBER)
@@ -52,3 +46,11 @@ async def collaborate_with_us(client, m: Message):
 @app.on_message(exists_filter & (filters.text == "ℹ️ آمار، گزارش و رویدادها"))
 async def stats_reports_events(client, m: Message):
     pass
+
+
+@app.on_message(exists_filter & (filters.text != "🏠 خانه"))
+async def Handle_moves(client, m: Message):
+    m.chat.id = str(m.chat.id)
+    if await db.select('users', ['move'], {'userID': m.chat.id})[0]['move'] == 'support':
+        await m.forward(ADMIN)
+        await m.reply('''✅ **پیامت به پشتیبانی ارسال شد!**\n\nتیم ما در اسرع وقت پاسخ خواهد داد. لطفاً صبور باش! 🙏**''')

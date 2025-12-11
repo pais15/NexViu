@@ -54,12 +54,6 @@ async def _dont_exists_filter(_, __, m: Message):
 async def _exists_filter(_, __, m: Message):
     return await db.exists('users', {'userID': str(m.chat.id)})
 
-def create_move_filter(target_move: str):
-    async def _f(_, __, m: Message):
-        user_data = await db.select('users', ['move'], {'userID': str(m.chat.id)})
-        return bool(user_data and user_data[0].get('move') == target_move)
-    return filters.create(_f)
-
 
 app = Client(
     "NexViu",
