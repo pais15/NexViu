@@ -45,7 +45,7 @@ async def start(client, m: Message):
         )       
 
 
-@app.on_message(filters.private and not filters.command("start") and dont_exists_filter)
+@app.on_message(filters.private and not filters.command("start") and dont_exists_filter and not_bot)
 async def dont_exists(client, m:Message):
     await m.reply(
         '''🎉 **خوش اومدی! ولی...**
@@ -76,7 +76,7 @@ from Member import *
 from Admin import *
 from moves import *
 
-@app.on_message(filters.private and exists_filter)
+@app.on_message(filters.private and exists_filter and not_bot)
 async def generic_handler(client, m: Message):
     await m.reply('''🤔 **این دستور رو ندارم!**
 
