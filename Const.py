@@ -71,7 +71,7 @@ async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
         # دکمه ویژه کاربران خاص
         # ------------------------
         # یک کوئری برای گرفتن همه id ها در یک بار
-        special_ids = await db.select("channels", columns=["userID"])
+        special_ids = await db.select("channel", columns=["userID"])
         special_ids += await db.select("post", columns=["userID"])
 
         if any(item["userID"] == user_id for item in special_ids):
