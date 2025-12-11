@@ -27,39 +27,40 @@ async def account_recharge_finance(client, m: Message):
 
 from pyrogram.errors import UserIsBlocked, InputUserDeactivated, ChatWriteForbidden
 from pyrogram.enums import ParseMode
-
 @app.on_message(filters.private & filters.user(int(ADMIN)))
 async def admin_reply_support(c, m: Message):
-    target = m.reply_to_message
+
+    # اول چک کن پیام ریپلای باشد
+    if not m.reply_to_message:
+        return  # هیچ ارتباطی به پشتیبانی ندارد
+
+    fwd = m.reply_to_message
+
+    # چک کن پیام ریپلای‌شده فوروارد بوده
+    if not (fwd.forward_from or fwd.forward_from_chat):
+        return await m.reply("❗️این پیام پاسخ به یک پیام فوروارد شده نیست.", quote=True)
+
+    target = fwd.forward_from or fwd.forward_from_chat
     target_id = target.id
     target_name = (
-        target.forward_from_chat.title if target.forward_from_chat else
-        f"{target.forward_from.first_name or ''} {target.forward_from.last_name or ''}".strip() or "کاربر"
+        fwd.forward_from_chat.title if fwd.forward_from_chat else
+        f"{fwd.forward_from.first_name or ''} {fwd.forward_from.last_name or ''}".strip() or "کاربر"
     )
 
     try:
+        # ارسال پاسخ به کاربر اصلی
         await c.send_message(
             chat_id=target_id,
-            text=m.text or m.caption or "📨 پیام جدید از طرف پشتیبانی",
-            reply_to_message_id=target.forward_from_message_id
+            text=m.text or m.caption or "📨 پیام جدید از پشتیبانی",
+            reply_to_message_id=fwd.forward_from_message_id
         )
 
         await m.reply(
-            f"✅ پاسخ با موفقیت برای "
-            f"<a href='tg://user?id={target_id}'>{target_name}</a> ارسال شد! 🎯",
+            f"✅ پیام برای "
+            f"<a href='tg://user?id={target_id}'>{target_name}</a> ارسال شد!",
             parse_mode=ParseMode.HTML,
             quote=True
         )
-
-    except UserIsBlocked:
-        await m.reply(f"⛔️ {target_name} ربات را بلاک کرده است.", quote=True)
-
-    except InputUserDeactivated:
-        await m.reply(f"⚠️ حساب {target_name} حذف شده است.", quote=True)
 
     except Exception as e:
-        await m.reply(
-            f"🚫 خطا رخ داد:\n<code>{str(e)[:100]}</code>",
-            parse_mode=ParseMode.HTML,
-            quote=True
-        )
+        await m.reply(f"⚠️ خطا:\n<code>{e}</code>", parse_mode=ParseMode.HTML)
