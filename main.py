@@ -66,12 +66,14 @@ async def catch_all(client, m: Message):
     await m.reply("این دستور رو ندارم!\nاز دکمه‌های پایین استفاده کن 👇",
                   reply_markup=await get_markup(m.from_user.id))
 
-async def main():
+async def startup():
     await db.connect()
     print("دیتابیس متصل شد")
     await app.start()
     print("ربات شروع شد")
-    await asyncio.Event().wait()  # نگه داشتن ربات زنده
+    await idle()
+    await app.stop()
+
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    app.run(startup())
