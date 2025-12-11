@@ -1,5 +1,19 @@
 from Helper import *
 from Const import *
+import fcntl, sys
+
+def prevent_double_run():
+    lockfile_path = "/tmp/bot.lock"
+    lockfile = open(lockfile_path, "w")
+    try:
+        fcntl.flock(lockfile, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        print("✔ Bot lock acquired. Only one instance running.")
+    except BlockingIOError:
+        print("❌ Another instance detected! Exiting...")
+        sys.exit()
+
+prevent_double_run()
+
 
 @app.on_message(filters.private & filters.command("start"))
 async def start(client, m: Message):
