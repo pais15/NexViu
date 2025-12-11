@@ -42,18 +42,6 @@ async def admin_reply_support(c, m: Message):
 
     try:
         await m.forward(chat_id=target_id)
-        await c.send_message(
-            chat_id=target_id,
-            text=(
-                "👨‍💻✨ <b>پاسخ تیم پشتیبانی NexViu</b>\n\n"
-                "سلام دوست عزیز! 🌟\n"
-                "ممنونیم که با ما همراهی 💖\n"
-                "اگه هر سوالی داشتی، با تمام وجود در خدمتتیم 🙌🔥\n"
-                "موفق باشی قهرمان! 🦾🏆"
-            ),
-            parse_mode=ParseMode.HTML,
-            reply_to_message_id=m.forward_from_message_id
-        )
 
         await m.reply(
             f"✅ پاسخ با موفقیت برای "
