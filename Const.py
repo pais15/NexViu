@@ -54,13 +54,11 @@ async def _dont_exists_filter(_, __, m: Message):
 async def _exists_filter(_, __, m: Message):
     return await db.exists('users', {'userID': str(m.chat.id)})
 
-async def _move_filter(_, __, m: Message, target_move: str):
-    user_data = await db.select('users', ['move'], {'userID': str(m.chat.id)})
-    return user_data and user_data[0]['move'] == target_move
-
 def create_move_filter(target_move: str):
-    return filters.create(lambda _, __, m: _move_filter(_, __, m, target_move))
-
+    async def _f(_, __, m: Message):
+        user_data = await db.select('users', ['move'], {'userID': str(m.chat.id)})
+        return bool(user_data and user_data[0].get('move') == target_move)
+    return filters.create(_f)
 
 app = Client(
     "NexViu",
@@ -85,7 +83,6 @@ ADMIN = '7979574575'
 
 dont_exists_filter = filters.create(_dont_exists_filter)
 exists_filter = filters.create(_exists_filter)
-move_filter = filters.create(_move_filter)
 
 # --------- منوی اصلی ادمین ---------
 admin_markup = ReplyKeyboardMarkup(

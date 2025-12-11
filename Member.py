@@ -22,13 +22,15 @@ async def wallet_and_transactions(client, m: Message):
 
 @app.on_message(exists_filter & (filters.text == "🆘 پشتیبانی و راهنما"))
 async def support_and_guide(client, m: Message):
-    await m.reply('''🆘 **پشتیبانی و راهنما**\n\nاگر سوالی داری یا به کمک نیاز داری، تیم پشتیبانی ما اینجاست تا کمکت کنه!\n\n📩 **برای ارتباط با پشتیبانی، از دکمه زیر استفاده کن:**''',
-                        reply_markup=ReplyKeyboardMarkup(
-                            [[KeyboardButton('🏠 خانه')]],
-                            resize_keyboard=True
-                        )
-                         )
-    await db.update('users', {'userID': str(m.chat.id)}, {'move': 'support'})
+    m.chat.id = str(m.chat.id)
+    await m.reply(
+        '''🆘 **پشتیبانی و راهنما**\n\nاگر سوالی داری یا به کمک نیاز داری، تیم پشتیبانی ما اینجاست تا کمکت کنه!\n\n📩 **برای ارتباط با پشتیبانی، از دکمه زیر استفاده کن:**''',
+        reply_markup=ReplyKeyboardMarkup(
+            [[KeyboardButton('🏠 خانه')]],
+            resize_keyboard=True
+        )
+    )
+    await db.update('users', {'move': 'support'}, {'userID': m.chat.id})
 
 
 @app.on_message(exists_filter & create_move_filter('support') & (filters.text != "🏠 خانه"))
