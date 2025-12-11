@@ -20,7 +20,7 @@ db_connect = {
 
 db = Database(**db_connect)
 
-ADMIN = 7979574575
+ADMIN = '7979574575'
 
 # --------- منوی اصلی ادمین ---------
 admin_markup = ReplyKeyboardMarkup(
