@@ -17,7 +17,6 @@ class Database:
             "command_timeout": kwargs.get("command_timeout", 60),
             "timeout": kwargs.get("timeout", 30),
         }
-        self.connect()
 
     # ----------------------
     # اتصال و بستن Pool

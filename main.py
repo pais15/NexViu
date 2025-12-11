@@ -45,5 +45,12 @@ async def start(client, m: Message):
             reply_markup=admin_markup,
         )       
 
+async def main():
+    await db.connect()
+    task_bot = asyncio.create_task(app.start())
+    print("Bot started")
+    await idle()
+    await app.stop()
+
 if __name__ == "__main__":
-    app.run()                  # تمام handlerها فعال می‌شوند
+    asyncio.run(main())                 # تمام handlerها فعال می‌شوند
