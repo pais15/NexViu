@@ -1,8 +1,7 @@
 from Helper import *
 from Member import *
 from Admin import *
-from Const import app, ADMIN, db, admin_markup, get_markup
-from imports import *
+from Const import *
 
 
 @app.on_message(filters.command("start") & filters.private)
@@ -54,14 +53,28 @@ async def debug_handler(_, m):
     await m.reply("Received.")
 
 async def main():
-    print("STARTING...")
-    await app.start()
-    print("APP STARTED!")
-    await idle()
-    print("IDLE EXIT")
+    print("در حال اتصال به دیتابیس...")
+    await db.connect()                    # ← اول دیتابیس وصل می‌شه
+    print("دیتابیس با موفقیت وصل شد!")
+    
+    print("در حال شروع ربات...")
+    await app.start()                     # ← بعد ربات استارت می‌شه
+    print("ربات با موفقیت شروع شد!")
+    
+    # اینجا یک ترفند مهم: دستی dispatcher رو فعال می‌کنیم
+    # این خط باعث می‌شه همه هندلرهایی که با @app.on_message تعریف کردی، ثبت بشن
+    await app.dispatcher.start()
+    
+    print("همه هندلرها ثبت شدند. ربات آماده است!")
+    print(f"تعداد هندلرهای ثبت‌شده: {len(app.dispatcher.groups.get(0, []))}")
+    
+    await idle()                          # منتظر پیام‌ها می‌مونه
+    print("در حال خاموش شدن...")
+    
+    await app.dispatcher.stop()
     await app.stop()
+    await db.close()
+    print("ربات و دیتابیس با موفقیت بسته شدند.")
 
-import asyncio
 if __name__ == "__main__":
-    print("تعداد هندلرهای ثبت‌شده برای پیام:", len(app.dispatcher.groups))
     asyncio.run(main())
