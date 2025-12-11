@@ -7,6 +7,7 @@ import inspect
 
 @app.on_message(filters.command("start") & filters.private)
 async def start(client, m: Message):
+    m.chat.id = str(m.chat.id)
     if m.chat.id != ADMIN:
         if not await db.exists('users', {'userID': m.chat.id}):
             await db.insert('users', {
