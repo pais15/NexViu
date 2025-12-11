@@ -1,7 +1,7 @@
 from Helper import *
 from Const import *
 
-@app.on_message(filters.private and filters.command("start"))
+@app.on_message(filters.private & filters.command("start"))
 async def start(client, m: Message):
     m.chat.id = str(m.chat.id)
     if not await db.exists('users', {'userID': m.chat.id}):
@@ -50,7 +50,7 @@ async def start(client, m: Message):
         )
 
 
-@app.on_message(filters.private and not filters.command("start") and dont_exists_filter and not_bot)
+@app.on_message(filters.private and  ~filters.command("start") and dont_exists_filter and not_bot)
 async def dont_exists(client, m:Message):
     await m.reply(
         '''🎉 **خوش اومدی! ولی...**
