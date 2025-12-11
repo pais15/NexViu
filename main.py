@@ -52,29 +52,23 @@ async def debug_handler(_, m):
     print("MESSAGE RECEIVED:", m.text)
     await m.reply("Received.")
 
-async def main():
+async def on_startup():
+    """هر چیزی که قبل از روشن شدن ربات باید انجام بشه اینجا می‌نویسه"""
     print("در حال اتصال به دیتابیس...")
-    await db.connect()                    # ← اول دیتابیس وصل می‌شه
+    await db.connect()
     print("دیتابیس با موفقیت وصل شد!")
-    
-    print("در حال شروع ربات...")
-    await app.start()                     # ← بعد ربات استارت می‌شه
-    print("ربات با موفقیت شروع شد!")
-    
-    # اینجا یک ترفند مهم: دستی dispatcher رو فعال می‌کنیم
-    # این خط باعث می‌شه همه هندلرهایی که با @app.on_message تعریف کردی، ثبت بشن
-    await app.dispatcher.start()
-    
-    print("همه هندلرها ثبت شدند. ربات آماده است!")
-    print(f"تعداد هندلرهای ثبت‌شده: {len(app.dispatcher.groups.get(0, []))}")
-    
-    await idle()                          # منتظر پیام‌ها می‌مونه
-    print("در حال خاموش شدن...")
-    
-    await app.dispatcher.stop()
-    await app.stop()
+
+    # اینجا می‌تونی کارهای دیگه هم بکنی:
+    # مثلاً چک کن مهاجرت دیتابیس، لود کردن تنظیمات، چک کردن کانال اجباری و …
+    # await migrate_database()
+    # await check_required_channels()
+
+async def on_shutdown():
+    """وقتی ربات خاموش میشه (Ctrl+C) این اجرا میشه"""
+    print("در حال بستن اتصالات...")
     await db.close()
-    print("ربات و دیتابیس با موفقیت بسته شدند.")
+    print("دیتابیس بسته شد. خداحافظ!")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    # این خط جادویی هست!
+    app.run(on_startup(), on_shutdown())
