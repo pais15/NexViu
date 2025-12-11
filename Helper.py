@@ -1,4 +1,4 @@
-from dataManager import db
+from Const import db
 import json, jdatetime, traceback, pytz
 from unidecode import unidecode
 from datetime import datetime, timedelta
