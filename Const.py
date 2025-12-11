@@ -1,6 +1,61 @@
 from dataManager import *
-from Helper import _dont_exists_filter, _exists_filter, _move_filter
+
 load_dotenv()
+
+async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
+    """
+    ساخت منوی کاربر بهینه برای Pyrogram
+    db: کلاس Database async (مثل کلاس Database ما)
+    """
+
+    buttons = []
+
+    try:
+        # ------------------------
+        # دکمه‌های اصلی
+        # ------------------------
+        user = await db.select("users", columns=["work"], where={"userID": user_id})
+        if user and user[0]["work"]:
+            if "play" in user[0]["work"]:
+                buttons.append([KeyboardButton("📢 کانال‌ها و گروه‌های من")])
+
+        buttons.append([KeyboardButton("🚀 ثبت تبلیغ جدید")])
+        buttons.append([KeyboardButton("💸 نمایش تبلیغ و کسب درآمد")])
+
+        # ------------------------
+        # دکمه‌های مالی و پشتیبانی
+        # ------------------------
+        buttons.append([KeyboardButton("💰 کیف پول و تراکنش‌ها"), KeyboardButton("🆘 پشتیبانی و راهنما")])
+
+        # ------------------------
+        # دکمه‌های درباره و همکاری
+        # ------------------------
+        buttons.append([KeyboardButton("💜 درباره NexViu"), KeyboardButton("🤝 همکاری با ما")])
+
+        # ------------------------
+        # دکمه ویژه کاربران خاص
+        # ------------------------
+        # یک کوئری برای گرفتن همه id ها در یک بار
+        special_ids = await db.select("channel", columns=["userID"])
+        special_ids += await db.select("post", columns=["userID"])
+
+        if any(item["userID"] == user_id for item in special_ids):
+            buttons.append([KeyboardButton("ℹ️ آمار، گزارش و رویدادها")])
+
+        return ReplyKeyboardMarkup(buttons, resize_keyboard=True)
+
+    except Exception as e:
+        print(f"خطا در ساخت منو برای کاربر {user_id}: {e}")
+        return ReplyKeyboardMarkup([], resize_keyboard=True)
+
+async def _dont_exists_filter(_, __, m: Message):
+    return not await db.exists('users', {'userID': str(m.chat.id)})
+
+async def _exists_filter(_, __, m: Message):
+    return await db.exists('users', {'userID': str(m.chat.id)})
+
+async def _move_filter(_, __, m: Message, move):
+    return await db.select('users', ['move'], {'userID': str(m.chat.id)})[0]['move'] == move
 
 app = Client(
     "NexViu",
