@@ -47,6 +47,6 @@ async def collaborate_with_us(client, m: Message):
     pass
 
 
-@app.on_message(exists_filter & filters.text_filter("ℹ️ آمار، گزارش و رویدادها"))
+@app.on_message(exists_filter & filters.text == "ℹ️ آمار، گزارش و رویدادها")
 async def stats_reports_events(client, m: Message):
     pass
