@@ -42,9 +42,8 @@ async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
         return ReplyKeyboardMarkup([[KeyboardButton("خانه")]], resize_keyboard=True)
 
 
-# فیلترها
 async def _dont_exists_filter(_, __, m):
-    return not  await db.exists("users", {"userID": str(m.from_user.id)})
+    return not await db.exists("users", {"userID": str(m.from_user.id)})
 
 async def _exists_filter(_, __, m):
     return await db.exists("users", {"userID": str(m.from_user.id)})

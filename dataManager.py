@@ -50,35 +50,36 @@ class Database:
             return dict(row)
 
     # فقط بخش متد select رو جایگزین کن
-    async def select(
-        self,
-        table: str,
-        columns: Optional[List[str]] = None,
-        where: Optional[Dict[str, Any]] = None,
-        raw_where: Optional[str] = None,
-        raw_values: Optional[List[Any]] = None
-    ) -> List[Dict[str, Any]]:
-        cols = ', '.join(f'"{col}"' for col in columns) if columns else '*'
-        values: List[Any] = []
-        query = f"SELECT {cols} FROM {table}"
+async def select(
+    self,
+    table: str,
+    columns: Optional[List[str]] = None,
+    where: Optional[Dict[str, Any]] = None,
+    raw_where: Optional[str] = None,
+    raw_values: Optional[List[Any]] = None
+) -> List[Dict[str, Any]]:
+    cols = ', '.join(f'"{col}"' for col in columns) if columns else '*'
+    values: List[Any] = []
+    query = f"SELECT {cols} FROM {table}"
 
-        if where or raw_where:
-            query += " WHERE "
-            conditions = []
-            if where:
-                for i, k in enumerate(where.keys()):
-                    conditions.append(f'"{k}" = ${len(values) + 1}')
-                    values.append(where[k])
-            if raw_where:
-                conditions.append(raw_where)
-                if raw_values:
-                    values.extend(raw_values)
-            query += " AND ".join(conditions) if len(conditions) > 1 else conditions[0]
+    if where or raw_where:
+        query += " WHERE "
+        conditions = []
+        if where:
+            for i, k in enumerate(where.keys()):
+                conditions.append(f'"{k}" = ${len(values) + 1}')
+                values.append(where[k])
+        if raw_where:
+            conditions.append(raw_where)
+            if raw_values:
+                values.extend(raw_values)
+        query += " AND ".join(conditions) if len(conditions) > 1 else conditions[0]
 
-        async with self.pool.acquire() as conn:
-            rows = await conn.fetch(query, *values)
-            return [dict(row) for row in rows]
-
+    async with self.pool.acquire() as conn:
+        rows = await conn.fetch(query, *values)
+        return [dict(row) for row in rows]
+    
+    
     async def update(self, table: str, data: dict, where: dict) -> Optional[Dict[str, Any]]:
         set_keys = list(data.keys())
         where_keys = list(where.keys())
@@ -108,8 +109,8 @@ class Database:
         values = list(where.values())
         async with self.pool.acquire() as conn:
             row = await conn.fetchrow(query, *values)
-            self._log(f"EXISTS {table} WHERE {where} -> {row is not  None}")
-            return row is not  None
+            self._log(f"EXISTS {table} WHERE {where} -> {row is not None}")
+            return row is not None
         
 db_connect = {
     "user": os.getenv("USERDB"),

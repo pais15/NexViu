@@ -7,19 +7,19 @@ async def process_url_command(mess):
     idk = mess.text.split()
 
     if len(idk) != 2:
-        return 'False: length is not  2'
+        return 'False: length is not 2'
 
     try:
         target_id = int(idk[1])
         user_chat_id = str(mess.chat.id)
 
-        if not  db.exists("referral", {"userID": target_id}):
-            return 'False: target is not  in url ids'
+        if not db.exists("referral", {"userID": target_id}):
+            return 'False: target is not in url ids'
 
         ref = await db.select("referral", ['referrals'], {'userID': target_id})
         current_ref = ref[0]["referrals"] if ref else []
 
-        if user_chat_id not  in current_ref:
+        if user_chat_id not in current_ref:
 
             current_ref.append(user_chat_id)
             await db.update("referral", {"referrals": current_ref}, where={"userID": target_id})
