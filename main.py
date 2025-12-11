@@ -24,7 +24,7 @@ async def start(client, m: Message):
             await process_url_command(m)
             await m.reply(
                 '''🌟 **خوش اومدی به NexViu!**\n\n🚀 **آماده‌ای کانالت رو بترکونی؟**\n👇 **یه گزینه انتخاب کن و شروع کنیم!**''',
-                reply_markup=await get_markup(m.chat.id)
+                reply_markup= await get_markup(m.chat.id)
             )
         else:
             # اول select کامل را await کن
