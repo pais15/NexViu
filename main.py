@@ -65,7 +65,6 @@ async def go_home(client, m: Message):
     user_data = await db.select('users', ['move', 'name'], {'userID': m.chat.id})
     move = user_data[0]['move'] if user_data else None
     name = user_data[0]['name'] if user_data else None
-
     name = name if name else "دوست عزیز"
     await db.update('users', {'move': None}, {'userID': m.chat.id})
     await m.reply(

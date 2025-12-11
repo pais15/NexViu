@@ -28,11 +28,12 @@ async def account_recharge_finance(client, m: Message):
 from pyrogram.errors import UserIsBlocked, InputUserDeactivated, ChatWriteForbidden
 from pyrogram.enums import ParseMode
 
-@app.on_message(filters.private & filters.user(ADMIN))
+@app.on_message(filters.private & filters.user(int(ADMIN)))
 async def admin_reply_support(c, m: Message):
 
     # پیام باید ریپلای باشد
     if not m.reply_to_message:
+        print('پیام باید ریپلای باش')
         return
     
     # پیام ریپلای‌شده باید فوروارد شده باشد
