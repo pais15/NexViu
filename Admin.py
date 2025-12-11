@@ -28,26 +28,35 @@ async def account_recharge_finance(client, m: Message):
 from pyrogram.errors import UserIsBlocked, InputUserDeactivated, ChatWriteForbidden
 from pyrogram.enums import ParseMode
 
-@app.on_message(filters.private & filters.user(int(ADMIN)))
+@app.on_message(filters.private & filters.user(ADMIN))
 async def admin_reply_support(c, m: Message):
-    if not (m.forward_from or m.forward_from_chat):
-        return await m.reply("❗️ منبع پیام پیدا نشد! لطفاً پیام صحیحی فوروارد کنید.", quote=True)
 
-    target = m.forward_from or m.forward_from_chat
+    # پیام باید ریپلای باشد
+    if not m.reply_to_message:
+        return
+    
+    # پیام ریپلای‌شده باید فوروارد شده باشد
+    fwd = m.reply_to_message
+    if not (fwd.forward_from or fwd.forward_from_chat):
+        return await m.reply("❗️ این پیام، پاسخ به یک پیام فوروارد شده نیست.", quote=True)
+
+    target = fwd.forward_from or fwd.forward_from_chat
     target_id = target.id
     target_name = (
-        m.forward_from_chat.title if m.forward_from_chat else
-        f"{m.forward_from.first_name or ''} {m.forward_from.last_name or ''}".strip() or "کاربر"
+        fwd.forward_from_chat.title if fwd.forward_from_chat else
+        f"{fwd.forward_from.first_name or ''} {fwd.forward_from.last_name or ''}".strip() or "کاربر"
     )
 
     try:
-        await m.forward(chat_id=target_id)
+        await c.send_message(
+            chat_id=target_id,
+            text=m.text or m.caption or "📨 پیام جدید از طرف پشتیبانی",
+            reply_to_message_id=fwd.forward_from_message_id
+        )
 
         await m.reply(
             f"✅ پاسخ با موفقیت برای "
-            f"<a href='tg://user?id={target_id}'>{target_name}</a> ارسال شد! 🎯\n\n"
-            "📨 کاربر پیام را دریافت کرد.\n"
-            "🔥 ادمین حرفه‌ای در حال درخشیدنه!",
+            f"<a href='tg://user?id={target_id}'>{target_name}</a> ارسال شد! 🎯",
             parse_mode=ParseMode.HTML,
             quote=True
         )
