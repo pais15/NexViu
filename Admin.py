@@ -25,9 +25,9 @@ async def account_recharge_finance(client, m: Message):
     pass
 
 
-@app.on_message(filters.private & filters.forwarded & filters.user(ADMIN))
+@app.on_message(filters.private & filters.forwarded & filters.user(int(ADMIN)))
 def admin_reply_support(client, m: Message):
-    original_chat_id = str(m.forward_from_chat.id) if m.forward_from_chat else str(m.forward_from.id)
+    original_chat_id = m.forward_from_chat.id
     client.send_message(
         chat_id=original_chat_id,
         text=f'''💬 **پاسخ پشتیبانی:**\n\n{m.text}'''
