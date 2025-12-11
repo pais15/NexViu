@@ -1,14 +1,13 @@
 from Helper import *
 from Const import *
 
-@app.on_message(exists_filter and (filters.text != "🏠 خانه"))
-async def Handle_moves(client, m: Message):
-    m.chat.id = str(m.chat.id)
-    rows = await db.select('users', ['move'], {'userID': m.chat.id})
-    if not rows:
-        return
+def move_required(move_name: str):
+    async def checker(_, __, m):
+        user = await db.select('users', ['move'], {'userID': str(m.from_user.id)})
+        return user and user[0].get('move') == move_name
+    return filters.create(checker)
 
-    move = rows[0].get('move')
-    if move == 'support':
-        await m.forward(int(ADMIN))
-        await m.reply('''✅ **پیامت به پشتیبانی ارسال شد!**\n\nتیم ما در اسرع وقت پاسخ خواهد داد. لطفاً صبور باش! 🙏''')
+@app.on_message(move_required('support'))
+async def Handle_moves(client, m: Message):
+    await m.forward(int(ADMIN))
+    await m.reply('''✅ **پیامت به پشتیبانی ارسال شد!**\n\nتیم ما در اسرع وقت پاسخ خواهد داد. لطفاً صبور باش! 🙏''')
