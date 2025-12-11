@@ -4,7 +4,7 @@ from collections import deque
 from imports import *
 
 class Database:
-    async def __init__(self, dsn: str = None, log_size: int = 50, **kwargs):
+    def __init__(self, dsn: str = None, log_size: int = 50, **kwargs):
         """
         log_size: تعداد آخرین لاگ‌ها که نگه داشته می‌شوند
         """
@@ -17,7 +17,7 @@ class Database:
             "command_timeout": kwargs.get("command_timeout", 60),
             "timeout": kwargs.get("timeout", 30),
         }
-        await self.connect()
+        asyncio.create_task(self.connect())
 
     # ----------------------
     # اتصال و بستن Pool
