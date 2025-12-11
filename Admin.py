@@ -27,7 +27,8 @@ async def account_recharge_finance(client, m: Message):
 
 from pyrogram.errors import UserIsBlocked, InputUserDeactivated, ChatWriteForbidden
 from pyrogram.enums import ParseMode
-@app.on_message(filters.private & filters.user(int(ADMIN)))
+
+@app.on_message(filters.private & filters.user(int(ADMIN)) & filters.reply)
 async def admin_reply_support(c, m: Message):
 
     # اول چک کن پیام ریپلای باشد
@@ -48,13 +49,7 @@ async def admin_reply_support(c, m: Message):
     )
 
     try:
-        # ارسال پاسخ به کاربر اصلی
-        await c.send_message(
-            chat_id=target_id,
-            text=m.text or m.caption or "📨 پیام جدید از پشتیبانی",
-            reply_to_message_id=fwd.forward_from_message_id
-        )
-
+        await m.forward(target_id)
         await m.reply(
             f"✅ پیام برای "
             f"<a href='tg://user?id={target_id}'>{target_name}</a> ارسال شد!",
