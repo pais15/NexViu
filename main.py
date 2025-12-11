@@ -46,8 +46,7 @@ async def start(client, m: Message):
         )       
 
 async def main():
-    await db.connect()
-    task_bot = asyncio.create_task(app.start())
+    await app.start()
     print("Bot started")
     await idle()
     await app.stop()
