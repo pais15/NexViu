@@ -12,7 +12,7 @@ async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
 
     try:
         user = await db.select("users", columns=["work"], where={"userID": str(user_id)})
-        if user and user[0].get("work") and "play" in user[0]["work"]:
+        if user & user[0].get("work") & "play" in user[0]["work"]:
             buttons.append([KeyboardButton("📢 کانال‌ها و گروه‌های من")])
 
         buttons.append([KeyboardButton("🚀 ثبت تبلیغ جدید")])

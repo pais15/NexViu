@@ -73,7 +73,7 @@ class Database:
                 conditions.append(raw_where)
                 if raw_values:
                     values.extend(raw_values)
-            query += " AND ".join(conditions) if len(conditions) > 1 else conditions[0]
+            query += " & ".join(conditions) if len(conditions) > 1 else conditions[0]
 
         async with self.pool.acquire() as conn:
             rows = await conn.fetch(query, *values)
@@ -84,7 +84,7 @@ class Database:
         set_keys = list(data.keys())
         where_keys = list(where.keys())
         set_clause = ', '.join(f'"{k}" = ${i+1}' for i, k in enumerate(set_keys))
-        where_clause = ' AND '.join(f'"{k}" = ${i+len(set_keys)+1}' for i, k in enumerate(where_keys))
+        where_clause = ' & '.join(f'"{k}" = ${i+len(set_keys)+1}' for i, k in enumerate(where_keys))
         query = f"UPDATE {table} SET {set_clause} WHERE {where_clause} RETURNING *"
         values = list(data.values()) + list(where.values())
         async with self.pool.acquire() as conn:
@@ -94,7 +94,7 @@ class Database:
 
     async def delete(self, table: str, where: dict) -> Optional[Dict[str, Any]]:
         where_keys = list(where.keys())
-        where_clause = ' AND '.join(f'"{k}" = ${i+1}' for i, k in enumerate(where_keys))
+        where_clause = ' & '.join(f'"{k}" = ${i+1}' for i, k in enumerate(where_keys))
         query = f"DELETE FROM {table} WHERE {where_clause} RETURNING *"
         values = list(where.values())
         async with self.pool.acquire() as conn:
@@ -104,7 +104,7 @@ class Database:
 
     async def exists(self, table: str, where: dict) -> bool:
         where_keys = list(where.keys())
-        where_clause = ' AND '.join(f'"{k}" = ${i+1}' for i, k in enumerate(where_keys))
+        where_clause = ' & '.join(f'"{k}" = ${i+1}' for i, k in enumerate(where_keys))
         query = f"SELECT 1 FROM {table} WHERE {where_clause} LIMIT 1"
         values = list(where.values())
         async with self.pool.acquire() as conn:

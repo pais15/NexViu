@@ -74,7 +74,7 @@ def get_time(input_day, input_time='23:55'):
         current_total_minutes = current_hour * 60 + current_minute
         input_total_minutes = input_hour * 60 + input_minute
 
-        if (current_day_index == input_day_index and current_total_minutes < input_total_minutes) or (current_day_index < input_day_index) or (current_day_index == input_day_index and current_total_minutes < input_total_minutes):
+        if (current_day_index == input_day_index & current_total_minutes < input_total_minutes) or (current_day_index < input_day_index) or (current_day_index == input_day_index & current_total_minutes < input_total_minutes):
 
             days_to_add = (input_day_index - current_day_index) % 7
         else:

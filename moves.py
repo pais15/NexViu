@@ -1,7 +1,7 @@
 from Helper import *
 from Const import *
 
-@app.on_message(exists_filter and (filters.text != "🏠 خانه"))
+@app.on_message(exists_filter & (filters.text != "🏠 خانه"))
 async def Handle_moves(client, m: Message):
     m.chat.id = str(m.chat.id)
     rows = await db.select('users', ['move'], {'userID': m.chat.id})
