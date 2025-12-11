@@ -4,8 +4,7 @@ from Const import *
 @app.on_message(filters.private and filters.command("start"))
 async def start(client, m: Message):
     m.chat.id = str(m.chat.id)
-    if m.chat.id != ADMIN:
-        if not await db.exists('users', {'userID': m.chat.id}):
+    if not await db.exists('users', {'userID': m.chat.id}):
             await db.insert('users', {
                 'userID': m.chat.id,
                 'name': None,
@@ -17,13 +16,19 @@ async def start(client, m: Message):
                 'userTextID': None,
                 'botTextID': None
             })
-            await process_url_command(m)
-            await m.reply(
-                '''🌟 **خوش اومدی به NexViu!**\n\n🚀 **آماده‌ای کانالت رو بترکونی؟**\n👇 **یه گزینه انتخاب کن و شروع کنیم!**''',
-                reply_markup= await get_markup(m.chat.id)
-            )
-        else:
-            # اول select کامل را await کن
+            if m.chat.id != ADMIN:
+                await process_url_command(m)
+                await m.reply(
+                    '''🌟 **خوش اومدی به NexViu!**\n\n🚀 **آماده‌ای کانالت رو بترکونی؟**\n👇 **یه گزینه انتخاب کن و شروع کنیم!**''',
+                    reply_markup= await get_markup(m.chat.id)
+                )
+            else:
+                 await m.reply(
+            '''👑 **سلام رئیس NexViu!**\n\n🔧 **آماده مدیریت کاربرا و تنظیم ربات؟**\n🚀 **بزن بریم!**''',
+            reply_markup=admin_markup,
+        )   
+    else:
+        if m.chat.id != ADMIN:
             user_data = await db.select('users', ['move', 'name'], {'userID': m.chat.id})
             move = user_data[0]['move'] if user_data else None
             name = user_data[0]['name'] if user_data else None
@@ -37,12 +42,12 @@ async def start(client, m: Message):
                 await m.reply(
                     f'''🌞 **سلام {name}!**\n\n🚀 **امروز چه برنامه‌ای داری؟**\n👇 **یه گزینه انتخاب کن!**''',
                     reply_markup=await get_markup(m.chat.id)
-                )
-    else:
-        await m.reply(
+                )  
+        else:
+            await m.reply(
             '''👑 **سلام رئیس NexViu!**\n\n🔧 **آماده مدیریت کاربرا و تنظیم ربات؟**\n🚀 **بزن بریم!**''',
             reply_markup=admin_markup,
-        )       
+        )
 
 
 @app.on_message(filters.private and not filters.command("start") and dont_exists_filter and not_bot)
