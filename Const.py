@@ -49,7 +49,7 @@ async def _exists_filter(_, __, m):
     return await db.exists("users", {"userID": str(m.from_user.id)})
 
 def not_bot_message(_, __, m: Message):
-    return not m.from_user.is_self
+    return not m.from_user.is_bot
 
 not_bot = filters.create(not_bot_message)
 dont_exists_filter = filters.create(_dont_exists_filter)
