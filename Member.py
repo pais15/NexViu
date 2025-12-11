@@ -20,7 +20,7 @@ async def wallet_and_transactions(client, m: Message):
     pass
 
 
-@app.on_message(exists_filter & filters.regex(r"^🆘 پشتیبانی و راهنما$"))
+@app.on_message(exists_filter & filters.regex(r"^🆘 پشتیبانی و راهنما$") & checkSend)
 async def support_and_guide(client, m: Message):
     m.chat.id = str(m.chat.id)
     await m.reply(
