@@ -58,17 +58,6 @@ async def on_startup():
     await db.connect()
     print("دیتابیس با موفقیت وصل شد!")
 
-    # اینجا می‌تونی کارهای دیگه هم بکنی:
-    # مثلاً چک کن مهاجرت دیتابیس، لود کردن تنظیمات، چک کردن کانال اجباری و …
-    # await migrate_database()
-    # await check_required_channels()
-
-async def on_shutdown():
-    """وقتی ربات خاموش میشه (Ctrl+C) این اجرا میشه"""
-    print("در حال بستن اتصالات...")
-    await db.close()
-    print("دیتابیس بسته شد. خداحافظ!")
-
 if __name__ == "__main__":
     # این خط جادویی هست!
-    app.run(on_startup(), on_shutdown())
+    app.run(on_startup())
