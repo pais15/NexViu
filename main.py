@@ -63,5 +63,5 @@ async def main():
 
 import asyncio
 if __name__ == "__main__":
-    print("تعداد هندلرهای ثبت‌شده برای پیام:", len(app.dispatcher.groups[0]))
+    print("تعداد هندلرهای ثبت‌شده برای پیام:", len(app.dispatcher.groups))
     asyncio.run(main())

@@ -1,4 +1,5 @@
 from dataManager import *
+load_dotenv()
 
 app = Client(
     "NexViu",
