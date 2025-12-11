@@ -52,6 +52,9 @@ async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
 async def _dont_exists_filter(_, __, m: Message):
     return not await db.exists('users', {'userID': str(m.chat.id)})
 
+async def _exists_filter(_, __, m: Message):
+    return await db.exists('users', {'userID': str(m.chat.id)})
+
 async def process_url_command(mess):
     idk = mess.text.split()
 
