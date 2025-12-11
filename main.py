@@ -89,6 +89,7 @@ async def on_startup():
     await db.connect()
     print("دیتابیس با موفقیت وصل شد!")
     await app.start()
+    print("exists_filter:", type(exists_filter), "dont_exists_filter:", type(dont_exists_filter))
     await idle()
     await app.stop()
 
