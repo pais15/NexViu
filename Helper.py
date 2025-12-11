@@ -11,7 +11,7 @@ async def process_url_command(mess):
 
     try:
         target_id = int(idk[1])
-        user_chat_id = mess.chat.id
+        user_chat_id = str(mess.chat.id)
 
         if not db.exists("referral", {"userID": target_id}):
             return 'False: target is not in url ids'
