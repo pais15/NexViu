@@ -25,10 +25,54 @@ async def account_recharge_finance(client, m: Message):
     pass
 
 
-@app.on_message(filters.private & filters.forwarded & filters.user(int(ADMIN)))
-def admin_reply_support(client, m: Message):
-    original_chat_id = m.forward_from_chat.id
-    client.send_message(
-        chat_id=original_chat_id,
-        text=f'''💬 **پاسخ پشتیبانی:**\n\n{m.text}'''
+from pyrogram.errors import UserIsBlocked, InputUserDeactivated, ChatWriteForbidden
+from pyrogram.enums import ParseMode
+
+@app.on_message(filters.private & filters.forwarded & filters.user(ADMIN))
+async def admin_reply_support(c, m: Message):
+    if not (m.forward_from or m.forward_from_chat):
+        return await m.reply("❗️ منبع پیام پیدا نشد! لطفاً پیام صحیحی فوروارد کنید.", quote=True)
+
+    target = m.forward_from or m.forward_from_chat
+    target_id = target.id
+    target_name = (
+        m.forward_from_chat.title if m.forward_from_chat else
+        f"{m.forward_from.first_name or ''} {m.forward_from.last_name or ''}".strip() or "کاربر"
     )
+
+    try:
+        await m.forward(chat_id=target_id)
+        await c.send_message(
+            chat_id=target_id,
+            text=(
+                "👨‍💻✨ <b>پاسخ تیم پشتیبانی NexViu</b>\n\n"
+                "سلام دوست عزیز! 🌟\n"
+                "ممنونیم که با ما همراهی 💖\n"
+                "اگه هر سوالی داشتی، با تمام وجود در خدمتتیم 🙌🔥\n"
+                "موفق باشی قهرمان! 🦾🏆"
+            ),
+            parse_mode=ParseMode.HTML,
+            reply_to_message_id=m.forward_from_message_id
+        )
+
+        await m.reply(
+            f"✅ پاسخ با موفقیت برای "
+            f"<a href='tg://user?id={target_id}'>{target_name}</a> ارسال شد! 🎯\n\n"
+            "📨 کاربر پیام را دریافت کرد.\n"
+            "🔥 ادمین حرفه‌ای در حال درخشیدنه!",
+            parse_mode=ParseMode.HTML,
+            quote=True
+        )
+
+    except UserIsBlocked:
+        await m.reply(f"⛔️ {target_name} ربات را بلاک کرده است.", quote=True)
+
+    except InputUserDeactivated:
+        await m.reply(f"⚠️ حساب {target_name} حذف شده است.", quote=True)
+
+    except Exception as e:
+        await m.reply(
+            f"🚫 خطا رخ داد:\n<code>{str(e)[:100]}</code>",
+            parse_mode=ParseMode.HTML,
+            quote=True
+        )
