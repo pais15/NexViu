@@ -1,6 +1,8 @@
 from Helper import *
 from Member import *
 from Admin import *
+from Const import app, ADMIN, db, admin_markup, get_markup
+from imports import *
 
 
 @app.on_message(filters.command("start") & filters.private)
@@ -61,4 +63,5 @@ async def main():
 
 import asyncio
 if __name__ == "__main__":
+    print("تعداد هندلرهای ثبت‌شده برای پیام:", len(app.dispatcher.groups[0]))
     asyncio.run(main())
