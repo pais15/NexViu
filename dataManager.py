@@ -108,8 +108,8 @@ class Database:
         values = list(where.values())
         async with self.pool.acquire() as conn:
             row = await conn.fetchrow(query, *values)
-            self._log(f"EXISTS {table} WHERE {where} -> {row is not None}")
-            return row is not None
+            self._log(f"EXISTS {table} WHERE {where} -> {row is not  None}")
+            return row is not  None
         
 db_connect = {
     "user": os.getenv("USERDB"),

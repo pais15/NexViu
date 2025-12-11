@@ -4,7 +4,7 @@ from Const import app, db, ADMIN, admin_markup, get_markup, dont_exists_filter, 
 from pyrogram import filters
 from pyrogram.types import Message
 
-@app.on_message(filters.private & filters.command("start"))
+@app.on_message(filters.private and filters.command("start"))
 async def start(client, m: Message):
     user_id = str(m.from_user.id)
 
@@ -18,7 +18,7 @@ async def start(client, m: Message):
         await m.reply("سلام رئیس NexViu!", reply_markup=admin_markup)
         return
 
-    if not await db.exists('users', {'userID': user_id}):
+    if not  await db.exists('users', {'userID': user_id}):
         await db.insert('users', {
             'userID': user_id,
             'name': None,
@@ -47,11 +47,11 @@ async def start(client, m: Message):
                 reply_markup=await get_markup(int(user_id))
             )
 
-@app.on_message(filters.private & ~filters.command("start") & dont_exists_filter)
+@app.on_message(filters.private and not filters.command("start") and dont_exists_filter)
 async def dont_exists(client, m: Message):
     await m.reply("اول باید ثبت‌نام کنی!\nفقط /start بزن 🚀")
 
-@app.on_message(filters.private & filters.text == "خانه" & exists_filter)
+@app.on_message(filters.private and filters.text == "خانه" and exists_filter)
 async def go_home(client, m: Message):
     user_id = str(m.from_user.id)
     await db.update('users', {'move': None}, {'userID': user_id})
@@ -61,7 +61,7 @@ from Member import *
 from Admin import *
 from moves import *
 
-@app.on_message(filters.private & exists_filter)
+@app.on_message(filters.private and exists_filter)
 async def catch_all(client, m: Message):
     await m.reply("این دستور رو ندارم!\nاز دکمه‌های پایین استفاده کن 👇",
                   reply_markup=await get_markup(m.from_user.id))
