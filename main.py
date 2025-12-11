@@ -61,7 +61,7 @@ from Member import *
 from Admin import *
 from moves import *
 
-@app.on_message(filters.private and exists_filter)
+@app.on_message(filters.private and dont_exists_filter)
 async def catch_all(client, m: Message):
     await m.reply("این دستور رو ندارم!\nاز دکمه‌های پایین استفاده کن 👇",
                   reply_markup=await get_markup(m.from_user.id))
