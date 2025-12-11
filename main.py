@@ -74,6 +74,7 @@ async def go_home(client, m: Message):
 
 from Member import *
 from Admin import *
+from moves import *
 
 @app.on_message(filters.private)
 async def generic_handler(client, m: Message):
