@@ -90,7 +90,7 @@ from Member import *
 from Admin import *
 from moves import *
 
-@app.on_message(filters.private &  exists_filter & not_bot)
+@app.on_message(filters.private &  exists_filter & not_bot & checkSend)
 async def generic_handler(client, m: Message):
     await m.reply('''🤔 **این دستور رو ندارم!**
 
