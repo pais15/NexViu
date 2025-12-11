@@ -71,10 +71,10 @@ async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
         # دکمه ویژه کاربران خاص
         # ------------------------
         # یک کوئری برای گرفتن همه id ها در یک بار
-        special_ids = await db.select("players", columns=["id"])
-        special_ids += await db.select("tablighs", columns=["id"])
+        special_ids = await db.select("channels", columns=["userID"])
+        special_ids += await db.select("post", columns=["userID"])
 
-        if any(item["id"] == user_id for item in special_ids):
+        if any(item["userID"] == user_id for item in special_ids):
             buttons.append([KeyboardButton("ℹ️ آمار، گزارش و رویدادها")])
 
         return ReplyKeyboardMarkup(buttons, resize_keyboard=True)
