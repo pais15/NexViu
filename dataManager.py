@@ -4,6 +4,7 @@ from collections import deque
 from imports import *
 
 class Database:
+
     def __init__(self, dsn: str = None, log_size: int = 50, **kwargs):
         """
         log_size: تعداد آخرین لاگ‌ها که نگه داشته می‌شوند
@@ -48,34 +49,33 @@ class Database:
             self._log(f"INSERT {table}: {data}")
             return dict(row)
 
+    # فقط بخش متد select رو جایگزین کن
     async def select(
-        db, 
-        table: str, 
-        columns: Optional[List[str]] = None, 
+        self,
+        table: str,
+        columns: Optional[List[str]] = None,
         where: Optional[Dict[str, Any]] = None,
         raw_where: Optional[str] = None,
         raw_values: Optional[List[Any]] = None
     ) -> List[Dict[str, Any]]:
         cols = ', '.join(f'"{col}"' for col in columns) if columns else '*'
         values: List[Any] = []
+        query = f"SELECT {cols} FROM {table}"
 
-        if where:
-            keys = list(where.keys())
-            conditions = ' AND '.join(f'"{k}" = ${i+1}' for i, k in enumerate(keys))
-            values.extend(list(where.values()))
-            query = f"SELECT {cols} FROM {table} WHERE {conditions}"
+        if where or raw_where:
+            query += " WHERE "
+            conditions = []
+            if where:
+                for i, k in enumerate(where.keys()):
+                    conditions.append(f'"{k}" = ${len(values) + 1}')
+                    values.append(where[k])
             if raw_where:
-                query += f" AND {raw_where}"
+                conditions.append(raw_where)
                 if raw_values:
                     values.extend(raw_values)
-        elif raw_where:
-            query = f"SELECT {cols} FROM {table} WHERE {raw_where}"
-            if raw_values:
-                values.extend(raw_values)
-        else:
-            query = f"SELECT {cols} FROM {table}"
+            query += " AND ".join(conditions) if len(conditions) > 1 else conditions[0]
 
-        async with db.pool.acquire() as conn:
+        async with self.pool.acquire() as conn:
             rows = await conn.fetch(query, *values)
             return [dict(row) for row in rows]
 
@@ -110,3 +110,13 @@ class Database:
             row = await conn.fetchrow(query, *values)
             self._log(f"EXISTS {table} WHERE {where} -> {row is not None}")
             return row is not None
+        
+db_connect = {
+    "user": os.getenv("USERDB"),
+    "password": os.getenv("PDB"),
+    "host": os.getenv("HOSTDB"),
+    "port": os.getenv("PORTDB"),
+    "database": os.getenv("NAMEDB"),
+}
+
+db = Database(**db_connect)

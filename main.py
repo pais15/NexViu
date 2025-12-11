@@ -1,97 +1,77 @@
-from Helper import *
-from Const import *
+import asyncio
+from Helper import process_url_command
+from Const import app, db, ADMIN, admin_markup, get_markup, dont_exists_filter, exists_filter
+from pyrogram import filters
+from pyrogram.types import Message
 
 @app.on_message(filters.private & filters.command("start"))
 async def start(client, m: Message):
-    m.chat.id = str(m.chat.id)
-    if m.chat.id != ADMIN:
-        if not await db.exists('users', {'userID': m.chat.id}):
-            await db.insert('users', {
-                'userID': m.chat.id,
-                'name': None,
-                'family': None,
-                'work': None,
-                'move': None,
-                'role': 'member',
-                'card': None,
-                'userTextID': None,
-                'botTextID': None
-            })
-            await process_url_command(m)
-            await m.reply(
-                '''🌟 **خوش اومدی به NexViu!**\n\n🚀 **آماده‌ای کانالت رو بترکونی؟**\n👇 **یه گزینه انتخاب کن و شروع کنیم!**''',
-                reply_markup= await get_markup(m.chat.id)
-            )
-        else:
-            # اول select کامل را await کن
-            user_data = await db.select('users', ['move', 'name'], {'userID': m.chat.id})
-            move = user_data[0]['move'] if user_data else None
-            name = user_data[0]['name'] if user_data else None
+    user_id = str(m.from_user.id)
 
-            if move is not None:
-                await m.reply(
-                    '''⚠️ **یه لحظه صبر کن!**\n\n🔄 **اول کار قبلیتو تموم کن!**'''
-                )
-            else:
-                name = name if name else "دوست عزیز"
-                await m.reply(
-                    f'''🌞 **سلام {name}!**\n\n🚀 **امروز چه برنامه‌ای داری؟**\n👇 **یه گزینه انتخاب کن!**''',
-                    reply_markup=await get_markup(m.chat.id)
-                )
-    else:
+    # پردازش لینک دعوت فقط اگر پارامتر داشته باشد
+    if len(m.command) > 1:
+        fake_message = m
+        fake_message.text = f"/start {m.command[1]}"
+        await process_url_command(fake_message)
+
+    if user_id == ADMIN:
+        await m.reply("سلام رئیس NexViu!", reply_markup=admin_markup)
+        return
+
+    if not await db.exists('users', {'userID': user_id}):
+        await db.insert('users', {
+            'userID': user_id,
+            'name': None,
+            'family': None,
+            'work': None,
+            'move': None,
+            'role': 'member',
+            'card': None,
+            'userTextID': None,
+            'botTextID': None
+        })
         await m.reply(
-            '''👑 **سلام رئیس NexViu!**\n\n🔧 **آماده مدیریت کاربرا و تنظیم ربات؟**\n🚀 **بزن بریم!**''',
-            reply_markup=admin_markup,
-        )       
+            "خوش اومدی به NexViu!\nیه گزینه انتخاب کن و شروع کنیم!",
+            reply_markup=await get_markup(int(user_id))
+        )
+    else:
+        user = await db.select('users', ['move', 'name'], {'userID': user_id})
+        move = user[0]['move'] if user else None
+        name = user[0]['name'] if user else "دوست عزیز"
 
+        if move:
+            await m.reply("اول کار قبلیتو تموم کن!")
+        else:
+            await m.reply(
+                f"سلام {name}!\nامروز چه برنامه‌ای داری؟",
+                reply_markup=await get_markup(int(user_id))
+            )
 
 @app.on_message(filters.private & ~filters.command("start") & dont_exists_filter)
-async def dont_exists(client, m:Message):
-    await m.reply(
-        '''🎉 **خوش اومدی! ولی...**
-🔐 **اول باید ثبت‌نام کنی!**
-👇 فقط `/start` بزن تا شروع کنیم! 🚀''',
-    )
+async def dont_exists(client, m: Message):
+    await m.reply("اول باید ثبت‌نام کنی!\nفقط /start بزن 🚀")
 
-
-@app.on_message(filters.private & (filters.text =='🏠 خانه') & exists_filter)
+@app.on_message(filters.private & filters.text == "خانه" & exists_filter)
 async def go_home(client, m: Message):
-    m.chat.id = str(m.chat.id)
-    user_data = await db.select('users', ['move', 'name'], {'userID': m.chat.id})
-    move = user_data[0]['move'] if user_data else None
-    name = user_data[0]['name'] if user_data else None
-
-    if move is not None:
-        await m.reply(
-            '''⚠️ **یه لحظه صبر کن!**\n\n🔄 **اول کار قبلیتو تموم کن!**'''
-        )
-    else:
-        name = name if name else "دوست عزیز"
-        await m.reply(
-            f'''🌞 **سلام {name}!**\n\n🚀 **امروز چه برنامه‌ای داری؟**\n👇 **یه گزینه انتخاب کن!**''',
-            reply_markup=await get_markup(m.chat.id)
-        )
+    user_id = str(m.from_user.id)
+    await db.update('users', {'move': None}, {'userID': user_id})
+    await m.reply("به خانه خوش اومدی!", reply_markup=await get_markup(int(user_id)))
 
 from Member import *
 from Admin import *
 from moves import *
 
-@app.on_message(filters.private)
-async def generic_handler(client, m: Message):
-    await m.reply('''🤔 **این دستور رو ندارم!**
+@app.on_message(filters.private & exists_filter)
+async def catch_all(client, m: Message):
+    await m.reply("این دستور رو ندارم!\nاز دکمه‌های پایین استفاده کن 👇",
+                  reply_markup=await get_markup(m.from_user.id))
 
-👇 **از دکمه‌های زیر بزن:** 💰📢👥🏠''', reply_markup=await get_markup(str(m.chat.id)))
-
-
-async def on_startup():
-    """هر چیزی که قبل از روشن شدن ربات باید انجام بشه اینجا می‌نویسه"""
-    print("در حال اتصال به دیتابیس...")
+async def main():
     await db.connect()
-    print("دیتابیس با موفقیت وصل شد!")
+    print("دیتابیس متصل شد")
     await app.start()
-    print("exists_filter:", type(exists_filter), "dont_exists_filter:", type(dont_exists_filter))
-    await idle()
-    await app.stop()
+    print("ربات شروع شد")
+    await asyncio.Event().wait()  # نگه داشتن ربات زنده
 
 if __name__ == "__main__":
-    app.run(on_startup())
+    asyncio.run(main())

@@ -1,23 +1,19 @@
-from dataManager import *
+from dataManager import db  # مهم!
+from pyrogram.types import ReplyKeyboardMarkup, KeyboardButton
+from pyrogram import filters
+from pyrogram import Client
+from imports import *
+from dotenv import load_dotenv
 
 load_dotenv()
 
 async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
-    """
-    ساخت منوی کاربر بهینه برای Pyrogram
-    db: کلاس Database async (مثل کلاس Database ما)
-    """
-
     buttons = []
 
     try:
-        # ------------------------
-        # دکمه‌های اصلی
-        # ------------------------
-        user = await db.select("users", columns=["work"], where={"userID": user_id})
-        if user and user[0]["work"]:
-            if "play" in user[0]["work"]:
-                buttons.append([KeyboardButton("📢 کانال‌ها و گروه‌های من")])
+        user = await db.select("users", columns=["work"], where={"userID": str(user_id)})
+        if user and user[0].get("work") and "play" in user[0]["work"]:
+            buttons.append([KeyboardButton("📢 کانال‌ها و گروه‌های من")])
 
         buttons.append([KeyboardButton("🚀 ثبت تبلیغ جدید")])
         buttons.append([KeyboardButton("💸 نمایش تبلیغ و کسب درآمد")])
@@ -32,56 +28,40 @@ async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
         # ------------------------
         buttons.append([KeyboardButton("💜 درباره NexViu"), KeyboardButton("🤝 همکاری با ما")])
 
-        # ------------------------
-        # دکمه ویژه کاربران خاص
-        # ------------------------
-        # یک کوئری برای گرفتن همه id ها در یک بار
-        special_ids = await db.select("channel", columns=["userID"])
-        special_ids += await db.select("post", columns=["userID"])
+        channel_ids = await db.select("channel", columns=["userID"])
+        post_ids = await db.select("post", columns=["userID"])
+        all_special = {item["userID"] for item in channel_ids + post_ids if item.get("userID")}
 
-        if any(item["userID"] == user_id for item in special_ids):
-            buttons.append([KeyboardButton("ℹ️ آمار، گزارش و رویدادها")])
+        if str(user_id) in all_special:
+            buttons.append([KeyboardButton("آمار، گزارش و رویدادها")])
 
         return ReplyKeyboardMarkup(buttons, resize_keyboard=True)
 
     except Exception as e:
         print(f"خطا در ساخت منو برای کاربر {user_id}: {e}")
-        return ReplyKeyboardMarkup([], resize_keyboard=True)
+        return ReplyKeyboardMarkup([[KeyboardButton("خانه")]], resize_keyboard=True)
 
-# ...existing code...
-async def _dont_exists_filter(_, __, m: Message):
-    return not await db.exists("users", {"userID": str(m.chat.id)})
 
-async def _exists_filter(_, __, m: Message):   
-    exists=  await db.exists("users", {"userID": str(m.chat.id)})
-    print(exists)
-    return exists
+# فیلترها
+async def _dont_exists_filter(_, __, m):
+    return not await db.exists("users", {"userID": str(m.from_user.id)})
 
-dont_exists_filter = filters.create(_dont_exists_filter, 'dont_exists')
-exists_filter = filters.create(_exists_filter, 'exists')
+async def _exists_filter(_, __, m):
+    return await db.exists("users", {"userID": str(m.from_user.id)})
 
-ADMIN = "7979574575"
+dont_exists_filter = filters.create(_dont_exists_filter)
+exists_filter = filters.create(_exists_filter)
 
+ADMIN = "7979574575"  # بهتره int باشه ولی فعلاً string نگه داشتم
 
 app = Client(
     "NexViu",
     bot_token=os.getenv("BOT_TOKEN"),
     api_id=int(os.getenv("API_ID")),
     api_hash=os.getenv("API_HASH"),
-    workdir="/app", 
+    workdir="/app",
     in_memory=False
 )
-
-db_connect = {
-    "user": os.getenv("USERDB"),
-    "password": os.getenv("PDB"),
-    "host": os.getenv("HOSTDB"),
-    "port": os.getenv("PORTDB"),
-    "database": os.getenv("NAMEDB"),
-}
-
-db = Database(**db_connect)
-
 # --------- منوی اصلی ادمین ---------
 admin_markup = ReplyKeyboardMarkup(
     [
