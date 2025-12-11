@@ -28,7 +28,7 @@ async def account_recharge_finance(client, m: Message):
 from pyrogram.errors import UserIsBlocked, InputUserDeactivated, ChatWriteForbidden
 from pyrogram.enums import ParseMode
 
-@app.on_message(filters.private & filters.forwarded & filters.user(ADMIN))
+@app.on_message(filters.private & filters.forwarded & filters.user(int(ADMIN)))
 async def admin_reply_support(c, m: Message):
     if not (m.forward_from or m.forward_from_chat):
         return await m.reply("❗️ منبع پیام پیدا نشد! لطفاً پیام صحیحی فوروارد کنید.", quote=True)
