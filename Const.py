@@ -52,11 +52,13 @@ async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
 async def _dont_exists_filter(_, __, m: Message):
     return not await db.exists("users", {"userID": str(m.chat.id)})
 
-async def _exists_filter(_, __, m: Message):
-    return await db.exists("users", {"userID": str(m.chat.id)})
+async def _exists_filter(_, __, m: Message):   
+    exists=  await db.exists("users", {"userID": str(m.chat.id)})
+    print(exists)
+    return exists
 
-dont_exists_filter = filters.create(_dont_exists_filter)
-exists_filter = filters.create(_exists_filter)
+dont_exists_filter = filters.create(_dont_exists_filter, 'dont_exists')
+exists_filter = filters.create(_exists_filter, 'exists')
 
 ADMIN = "7979574575"
 
