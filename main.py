@@ -19,8 +19,8 @@ prevent_double_run()
 async def start(client, m: Message):
     m.chat.id = str(m.chat.id)
     if not await db.exists('users', {'userID': m.chat.id}):
-            await db.insert('users', {
-                'userID': m.chat.id,
+        await db.insert('users', {
+            'userID': m.chat.id,
                 'name': None,
                 'family': None,
                 'work': None,
@@ -30,14 +30,14 @@ async def start(client, m: Message):
                 'userTextID': None,
                 'botTextID': None
             })
-            if m.chat.id != ADMIN:
-                await process_url_command(m)
-                await m.reply(
-                    '''🌟 **خوش اومدی به NexViu!**\n\n🚀 **آماده‌ای کانالت رو بترکونی؟**\n👇 **یه گزینه انتخاب کن و شروع کنیم!**''',
-                    reply_markup= await get_markup(m.chat.id)
-                )
-            else:
-                 await m.reply(
+        if m.chat.id != ADMIN:
+            await process_url_command(m)
+            await m.reply(
+                HI_MEMBER,
+                reply_markup= await get_markup(m.chat.id)
+            )
+        else:
+            await m.reply(
             '''👑 **سلام رئیس NexViu!**\n\n🔧 **آماده مدیریت کاربرا و تنظیم ربات؟**\n🚀 **بزن بریم!**''',
             reply_markup=admin_markup,
         )   
