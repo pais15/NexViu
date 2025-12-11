@@ -30,29 +30,18 @@ from pyrogram.enums import ParseMode
 
 @app.on_message(filters.private & filters.user(int(ADMIN)))
 async def admin_reply_support(c, m: Message):
-
-    # پیام باید ریپلای باشد
-    if not m.reply_to_message:
-        print('پیام باید ریپلای باش')
-        return
-    
-    # پیام ریپلای‌شده باید فوروارد شده باشد
-    fwd = m.reply_to_message
-    if not (fwd.forward_from or fwd.forward_from_chat):
-        return await m.reply("❗️ این پیام، پاسخ به یک پیام فوروارد شده نیست.", quote=True)
-
-    target = fwd.forward_from or fwd.forward_from_chat
+    target = m.reply_to_message
     target_id = target.id
     target_name = (
-        fwd.forward_from_chat.title if fwd.forward_from_chat else
-        f"{fwd.forward_from.first_name or ''} {fwd.forward_from.last_name or ''}".strip() or "کاربر"
+        target.forward_from_chat.title if target.forward_from_chat else
+        f"{target.forward_from.first_name or ''} {target.forward_from.last_name or ''}".strip() or "کاربر"
     )
 
     try:
         await c.send_message(
             chat_id=target_id,
             text=m.text or m.caption or "📨 پیام جدید از طرف پشتیبانی",
-            reply_to_message_id=fwd.forward_from_message_id
+            reply_to_message_id=target.forward_from_message_id
         )
 
         await m.reply(
