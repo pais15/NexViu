@@ -17,7 +17,7 @@ class Database:
             "command_timeout": kwargs.get("command_timeout", 60),
             "timeout": kwargs.get("timeout", 30),
         }
-        asyncio.create_task(self.connect())
+        self.connect()
 
     # ----------------------
     # اتصال و بستن Pool
