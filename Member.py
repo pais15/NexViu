@@ -1,26 +1,26 @@
 from Const import *
 
-@app.on_message( exists_filter & (filters.text == "📢 کانال‌ها و گروه‌های من"))
+@app.on_message( exists_filter and (filters.text == "📢 کانال‌ها و گروه‌های من"))
 async def my_channels(client, m: Message):
     pass
 
 
-@app.on_message( exists_filter & (filters.text == "🚀 ثبت تبلیغ جدید"))
+@app.on_message( exists_filter and (filters.text == "🚀 ثبت تبلیغ جدید"))
 async def new_advertisement(client, m: Message):
     pass
 
 
-@app.on_message( exists_filter & (filters.text == "💸 نمایش تبلیغ و کسب درآمد"))
+@app.on_message( exists_filter and (filters.text == "💸 نمایش تبلیغ و کسب درآمد"))
 async def show_advertisement(client, m: Message):
     pass
 
 
-@app.on_message( exists_filter & (filters.text == "💰 کیف پول و تراکنش‌ها"))
+@app.on_message( exists_filter and (filters.text == "💰 کیف پول و تراکنش‌ها"))
 async def wallet_and_transactions(client, m: Message):
     pass
 
 
-@app.on_message( exists_filter & (filters.text == "🆘 پشتیبانی و راهنما"))
+@app.on_message( exists_filter and (filters.text == "🆘 پشتیبانی و راهنما"))
 async def support_and_guide(client, m: Message):
     m.chat.id = str(m.chat.id)
     await m.reply(
@@ -33,16 +33,16 @@ async def support_and_guide(client, m: Message):
     await db.update('users', {'move': 'support'}, {'userID': m.chat.id})
 
 
-@app.on_message( exists_filter & (filters.text == "💜 درباره NexViu"))
+@app.on_message( exists_filter and (filters.text == "💜 درباره NexViu"))
 async def about_nexviu(client, m: Message):
     await m.reply(HI_MEMBER)
 
 
-@app.on_message( exists_filter & (filters.text == "🤝 همکاری با ما"))
+@app.on_message( exists_filter and (filters.text == "🤝 همکاری با ما"))
 async def collaborate_with_us(client, m: Message):
     pass
 
 
-@app.on_message( exists_filter & (filters.text == "ℹ️ آمار، گزارش و رویدادها"))
+@app.on_message( exists_filter and (filters.text == "ℹ️ آمار، گزارش و رویدادها"))
 async def stats_reports_events(client, m: Message):
     pass
