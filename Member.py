@@ -31,7 +31,7 @@ async def support_and_guide(client, m: Message):
     await db.update('users', {'userID': str(m.chat.id)}, {'move': 'support'})
 
 
-@app.on_message(exists_filter & move_filter('support') & ~filters.text == "🏠 خانه")
+@app.on_message(exists_filter & create_move_filter('support') & ~filters.text == "🏠 خانه")
 async def handle_support_messages(client, m: Message):
     await m.forward(ADMIN)
     await m.reply('''✅ **پیامت به پشتیبانی ارسال شد!**\n\nتیم ما در اسرع وقت پاسخ خواهد داد. لطفاً صبور باش! 🙏**''')
