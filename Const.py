@@ -30,6 +30,8 @@ async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
 
         channel_ids = await db.select("channel", columns=["userID"])
         post_ids = await db.select("post", columns=["userID"])
+        channel_ids = channel_ids if channel_ids else []
+        post_ids = post_ids if post_ids else []
         all_special = {item["userID"] for item in channel_ids + post_ids if item.get("userID")}
 
         if str(user_id) in all_special:
@@ -39,7 +41,7 @@ async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
 
     except Exception as e:
         print(f"خطا در ساخت منو برای کاربر {user_id}: {e}")
-        return ReplyKeyboardMarkup([[KeyboardButton("خانه")]], resize_keyboard=True)
+        return ReplyKeyboardMarkup([[KeyboardButton('🏠 خانه')]], resize_keyboard=True)
 
 
 async def _dont_exists_filter(_, __, m):
