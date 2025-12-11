@@ -46,15 +46,19 @@ async def start(client, m: Message):
         )       
 
 
+@app.on_message()
+async def debug_handler(_, m):
+    print("MESSAGE RECEIVED:", m.text)
+    await m.reply("Received.")
+
 async def main():
-    await db.connect()   
-    await app.start()     
-    print("Bot started")
-
-    await idle()          
-
+    print("STARTING...")
+    await app.start()
+    print("APP STARTED!")
+    await idle()
+    print("IDLE EXIT")
     await app.stop()
-    await db.close()
 
+import asyncio
 if __name__ == "__main__":
-    asyncio.run(main())                
+    asyncio.run(main())
