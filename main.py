@@ -59,7 +59,7 @@ async def dont_exists(client, m:Message):
     )
 
 
-@app.on_message(filters.private & exists_filter and (filters.text =='🏠 خانه'))
+@app.on_message(filters.private & exists_filter & filters.regex(r"^🏠 خانه$"))
 async def go_home(client, m: Message):
     m.chat.id = str(m.chat.id)
     user_data = await db.select('users', ['move', 'name'], {'userID': m.chat.id})
