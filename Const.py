@@ -1,5 +1,5 @@
 from dataManager import *
-from Helper import _dont_exists_filter, _exists_filter
+from Helper import _dont_exists_filter, _exists_filter, _move_filter
 load_dotenv()
 
 app = Client(
@@ -25,6 +25,7 @@ ADMIN = '7979574575'
 
 dont_exists_filter = filters.create(_dont_exists_filter)
 exists_filter = filters.create(_exists_filter)
+move_filter = filters.create(_move_filter)
 
 # --------- منوی اصلی ادمین ---------
 admin_markup = ReplyKeyboardMarkup(

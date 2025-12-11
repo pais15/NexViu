@@ -55,6 +55,9 @@ async def _dont_exists_filter(_, __, m: Message):
 async def _exists_filter(_, __, m: Message):
     return await db.exists('users', {'userID': str(m.chat.id)})
 
+async def _move_filter(_, __, m: Message, move):
+    return await db.select('users', ['move'], {'userID': str(m.chat.id)})[0]['move'] == move
+
 async def process_url_command(mess):
     idk = mess.text.split()
 

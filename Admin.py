@@ -28,3 +28,12 @@ async def set_publisher_income(client, m: Message):
 @app.on_message(filters.text_filter("💳 شارژ حساب / امور مالی"))
 async def account_recharge_finance(client, m: Message):
     pass
+
+
+@app.on_message(filters.private & filters.forwarded & filters.user(ADMIN))
+def admin_reply_support(client, m: Message):
+    original_chat_id = str(m.forward_from_chat.id) if m.forward_from_chat else str(m.forward_from.id)
+    client.send_message(
+        chat_id=original_chat_id,
+        text=f'''💬 **پاسخ پشتیبانی:**\n\n{m.text}'''
+    )
