@@ -37,7 +37,7 @@ admin_markup = ReplyKeyboardMarkup(
     resize_keyboard=True
 )
 
-async def get_markup(user_id: int, db) -> ReplyKeyboardMarkup:
+async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
     """
     ساخت منوی کاربر بهینه برای Pyrogram
     db: کلاس Database async (مثل کلاس Database ما)
