@@ -8,7 +8,7 @@ processed= set()
 load_dotenv()
 
 async def sendManager(_, __, m: Message):
-    uid = f"{m.chat.id}:{m.message_id}"
+    uid = f"{m.chat.id}:{m.id}"
     if uid in processed:
         return False
     processed.add(uid)
