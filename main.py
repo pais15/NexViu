@@ -2,6 +2,7 @@ from Helper import *
 from Member import *
 from Admin import *
 from Const import *
+import inspect
 
 
 @app.on_message(filters.command("start") & filters.private)
@@ -57,7 +58,15 @@ async def on_startup():
     print("در حال اتصال به دیتابیس...")
     await db.connect()
     print("دیتابیس با موفقیت وصل شد!")
+    if inspect.iscoroutinefunction(app.start):
+                await app.start()
+                await idle()
+                await app.stop()
+    else:
+                await app.start()
+                await idle()
+                await app.stop()
 
 if __name__ == "__main__":
     # این خط جادویی هست!
-    app.run(on_startup())
+    app.run(on_startup)
