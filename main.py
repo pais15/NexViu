@@ -66,13 +66,8 @@ async def go_home(client, m: Message):
     move = user_data[0]['move'] if user_data else None
     name = user_data[0]['name'] if user_data else None
 
-    if move is not None:
-        await m.reply(
-            '''⚠️ **یه لحظه صبر کن!**\n\n🔄 **اول کار قبلیتو تموم کن!**'''
-        )
-    else:
-        name = name if name else "دوست عزیز"
-        await m.reply(
+    name = name if name else "دوست عزیز"
+    await m.reply(
             f'''🌞 **سلام {name}!**\n\n🚀 **امروز چه برنامه‌ای داری؟**\n👇 **یه گزینه انتخاب کن!**''',
             reply_markup=await get_markup(m.chat.id)
         )
