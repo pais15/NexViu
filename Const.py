@@ -48,11 +48,17 @@ async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
         print(f"خطا در ساخت منو برای کاربر {user_id}: {e}")
         return ReplyKeyboardMarkup([], resize_keyboard=True)
 
+# ...existing code...
 async def _dont_exists_filter(_, __, m: Message):
-    return not await db.exists('users', {'userID': str(m.chat.id)})
+    return not await db.exists("users", {"userID": str(m.chat.id)})
 
 async def _exists_filter(_, __, m: Message):
-    return await db.exists('users', {'userID': str(m.chat.id)})
+    return await db.exists("users", {"userID": str(m.chat.id)})
+
+dont_exists_filter = filters.create(_dont_exists_filter)
+exists_filter = filters.create(_exists_filter)
+
+ADMIN = "7979574575"
 
 
 app = Client(
@@ -73,11 +79,6 @@ db_connect = {
 }
 
 db = Database(**db_connect)
-
-ADMIN = '7979574575'
-
-dont_exists_filter = filters.create(_dont_exists_filter)
-exists_filter = filters.create(_exists_filter)
 
 # --------- منوی اصلی ادمین ---------
 admin_markup = ReplyKeyboardMarkup(
