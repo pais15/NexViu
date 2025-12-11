@@ -40,7 +40,7 @@ class Database:
     # CRUD Methods
     # ----------------------
     async def insert(self, table: str, data: dict) -> Dict[str, Any]:
-        columns = ', '.join(data.keys())
+        columns = ', '.join(f'"{col}"' for col in data.keys())
         placeholders = ', '.join(f"${i+1}" for i in range(len(data)))
         query = f"INSERT INTO {table} ({columns}) VALUES ({placeholders}) RETURNING *"
         async with self.pool.acquire() as conn:
@@ -56,32 +56,12 @@ class Database:
         raw_where: Optional[str] = None,
         raw_values: Optional[List[Any]] = None
     ) -> List[Dict[str, Any]]:
-        """
-        انتخاب رکوردها از جدول با پشتیبانی از JSONB و کوئری سفارشی
-        
-        db: نمونه Database async
-        table: نام جدول
-        columns: ستون‌هایی که می‌خوای انتخاب کنی
-        where: شرط‌های ساده {'col': value} برای ستون‌های عادی
-        raw_where: شرط دلخواه SQL (مثلاً برای JSONB) بدون WHERE
-        raw_values: مقادیر پارامترهای raw_where به ترتیب $1, $2, ...
-        
-        مثال:
-            # ستون JSONB با شرط
-            rows = await select_advanced(
-                db,
-                "users",
-                columns=["id", "settings"],
-                raw_where="settings->>'theme' = $1",
-                raw_values=["dark"]
-            )
-        """
-        cols = ', '.join(columns) if columns else '*'
+        cols = ', '.join(f'"{col}"' for col in columns) if columns else '*'
         values: List[Any] = []
 
         if where:
             keys = list(where.keys())
-            conditions = ' AND '.join(f"{k} = ${i+1}" for i, k in enumerate(keys))
+            conditions = ' AND '.join(f'"{k}" = ${i+1}' for i, k in enumerate(keys))
             values.extend(list(where.values()))
             query = f"SELECT {cols} FROM {table} WHERE {conditions}"
             if raw_where:
@@ -102,8 +82,8 @@ class Database:
     async def update(self, table: str, data: dict, where: dict) -> Optional[Dict[str, Any]]:
         set_keys = list(data.keys())
         where_keys = list(where.keys())
-        set_clause = ', '.join(f"{k} = ${i+1}" for i, k in enumerate(set_keys))
-        where_clause = ' AND '.join(f"{k} = ${i+len(set_keys)+1}" for i, k in enumerate(where_keys))
+        set_clause = ', '.join(f'"{k}" = ${i+1}' for i, k in enumerate(set_keys))
+        where_clause = ' AND '.join(f'"{k}" = ${i+len(set_keys)+1}' for i, k in enumerate(where_keys))
         query = f"UPDATE {table} SET {set_clause} WHERE {where_clause} RETURNING *"
         values = list(data.values()) + list(where.values())
         async with self.pool.acquire() as conn:
@@ -113,7 +93,7 @@ class Database:
 
     async def delete(self, table: str, where: dict) -> Optional[Dict[str, Any]]:
         where_keys = list(where.keys())
-        where_clause = ' AND '.join(f"{k} = ${i+1}" for i, k in enumerate(where_keys))
+        where_clause = ' AND '.join(f'"{k}" = ${i+1}' for i, k in enumerate(where_keys))
         query = f"DELETE FROM {table} WHERE {where_clause} RETURNING *"
         values = list(where.values())
         async with self.pool.acquire() as conn:
@@ -123,7 +103,7 @@ class Database:
 
     async def exists(self, table: str, where: dict) -> bool:
         where_keys = list(where.keys())
-        where_clause = ' AND '.join(f"{k} = ${i+1}" for i, k in enumerate(where_keys))
+        where_clause = ' AND '.join(f'"{k}" = ${i+1}' for i, k in enumerate(where_keys))
         query = f"SELECT 1 FROM {table} WHERE {where_clause} LIMIT 1"
         values = list(where.values())
         async with self.pool.acquire() as conn:
