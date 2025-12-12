@@ -38,7 +38,7 @@ async def list_users(client:Client, m: Message):
             message_lines.append(line)
     text = "\n".join(message_lines)
     text += '\n\nکاربر مورد نظر یافت نشد؟ یوزرنیمش و وارد کن: '
-    await db.update('users', {'move': 'search_users'}, {'userID': m.chat.id})
+    await db.update('users', {'move': 'search_users'}, {'userID': ADMIN})
     markup = ReplyKeyboardMarkup(
         [[KeyboardButton('🏠 خانه')]],
         resize_keyboard=True
