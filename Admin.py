@@ -13,7 +13,7 @@ async def list_users(client:Client, m: Message):
         end = 0
     else:
         end = 5
-    for i in range(len(users), end, -1):
+    for i in range(len(users), -1, -1):
         if i < len(users):
             user = users[i]
             userID = user['userID']
@@ -31,7 +31,7 @@ async def list_users(client:Client, m: Message):
             line = f"""🆔: `{user['userID']}` 
         نام: {name} 
        نام کاربری: @{user['username'] if user['username'] else f'[{name}](tg://user?id={userID})'}
-    موجودی:     {coins} تومان
+        موجودی: {coins} تومان
         شغل: {user['work'] or 'تعریف نشده'}
         وضعیت حرکت: {user['move'] or 'تعریف نشده'}
         کارت بانکی: {user['card'] or 'تعریف نشده'}"""
