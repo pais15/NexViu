@@ -46,3 +46,9 @@ async def collaborate_with_us(client, m: Message):
 @app.on_message(exists_filter & filters.regex(r"^ℹ️ آمار، گزارش و رویدادها$"))
 async def stats_reports_events(client, m: Message):
     pass
+
+
+@app.on_message(filters.forwarded)
+async def get_forwarded(client, m:Message):
+    channelId = m.forward_from_chat.id
+    await m.reply(f'channel id: {channelId}')
