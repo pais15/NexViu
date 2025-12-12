@@ -59,7 +59,8 @@ def not_bot_message(_, __, m: Message):
 async def not_joined_filter(_, __, m: Message):
     try:
         member = await app.get_chat_member(CHANNEL_ID, m.from_user.id)
-        return member.status in ["left", "kicked"]
+        member.status in ["left", "kicked"]
+        return False
     except:
         return True
     
