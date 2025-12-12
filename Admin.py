@@ -1,27 +1,27 @@
 from Const import *
 
 @app.on_message(filters.user(int(ADMIN)) & filters.private & filters.regex(r"^👥 لیست کاربران$"))
-async def list_users(client, m: Message):
+async def list_users(client:Client, m: Message):
     pass
 
 @app.on_message(filters.user(int(ADMIN)) & filters.private & filters.regex(r"^🛑 حذف کاربران متخلف$"))
-async def delete_offending_users(client, m: Message):
+async def delete_offending_users(client:Client, m: Message):
     pass
 
 @app.on_message(filters.user(int(ADMIN)) & filters.private & filters.regex(r"^📊 گزارش و آمار سیستم$"))
-async def system_reports_stats(client, m: Message):
+async def system_reports_stats(client:Client, m: Message):
     pass
 
 @app.on_message(filters.user(int(ADMIN)) & filters.private & filters.regex(r"^💰 تنظیم هزینه تبلیغات$"))
-async def set_advertisement_cost(client, m: Message):
+async def set_advertisement_cost(client:Client, m: Message):
     pass
 
 @app.on_message(filters.user(int(ADMIN)) & filters.private & filters.regex(r"^💵 تنظیم درآمد منتشرکنندگان$"))
-async def set_publisher_income(client, m: Message):
+async def set_publisher_income(client:Client, m: Message):
     pass
 
 @app.on_message(filters.user(int(ADMIN)) & filters.private & filters.regex(r"^💳 شارژ حساب / امور مالی$"))
-async def account_recharge_finance(client, m: Message):
+async def account_recharge_finance(client:Client, m: Message):
     pass
 
 
