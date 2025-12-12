@@ -14,8 +14,8 @@ async def handle_moves(client: Client, m: Message):
         if getattr(m, "media", None):
             original_caption = (m.caption or "").strip()
             new_caption = f"{m.chat.id}: {original_caption}".strip()
-            sent = await client.copy_message(
-                chat_id=ADMIN,
+            await client.copy_message(
+                chat_id=int(ADMIN),
                 from_chat_id=m.chat.id,
                 message_id=m.message_id,
                 caption=new_caption if new_caption else None
@@ -23,7 +23,7 @@ async def handle_moves(client: Client, m: Message):
         else:
             text = (m.text or m.caption or "").strip()
             new_text = f"{m.chat.id}: {text}" if text else f"{m.chat.id}:"
-            sent = await client.send_message(chat_id=ADMIN, text=new_text)
+            await client.send_message(chat_id=int(ADMIN), text=new_text)
 
     except Exception as e:
         print("Error while sending to admin:", e)
