@@ -28,6 +28,10 @@ async def list_users(client:Client, m: Message):
                 name = " ".join(p for p in parts if p)
                 if not name:
                     name = (getattr(default_name, "username", "") or "").strip() or "کاربر"
+            channels = await db.select('channel', ['title', 'link'], {'userID': str(userID)})
+            if channels:
+                for channel in channels:
+                    message_lines.append(f"📢 کانال: [{channel.get('title', 'بدون عنوان')}]({channel.get('link')})")
             line = f"""🆔: `{user['userID']}` 
         نام: {name} 
        نام کاربری: @{user['username'] if user['username'] else f'[{name}](tg://user?id={userID})'}
