@@ -5,7 +5,12 @@ from datetime import datetime, timedelta
 
 async def process_url_command(mess):
     idk = mess.text.split()
-
+    user_ref_exists = await db.exists('referral', {'userID': str(mess.chat.id)})
+    if user_ref_exists:
+        return 'False: user already has referral record'
+    else:
+        await db.insert('referral', {'userID': str(mess.chat.id),
+                                     'referrals': []})
     if len(idk) != 2:
         return 'False: length is not 2'
 
