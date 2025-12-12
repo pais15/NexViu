@@ -2,7 +2,17 @@ from Const import *
 
 @app.on_message(filters.user(int(ADMIN)) & filters.private & filters.regex(r"^👥 لیست کاربران$"))
 async def list_users(client:Client, m: Message):
-    pass
+    users = await db.select('users', ['userID', 'name', 'balance'])
+    if not users:
+        await m.reply("هیچ کاربری ثبت نشده است.")
+        return
+    message_lines = ["👥 **لیست کاربران ثبت‌شده:**\n"
+                     "-------------------------"]
+    for user in users:
+        line = f"🆔: `{user['userID']}` | نام: {user.get('name', 'ناشناخته')} | موجودی: {user.get('balance', 0)} تومان"
+        message_lines.append(line)
+
+    await m.reply("\n".join(message_lines))
 
 @app.on_message(filters.user(int(ADMIN)) & filters.private & filters.regex(r"^🛑 حذف کاربران متخلف$"))
 async def delete_offending_users(client:Client, m: Message):
