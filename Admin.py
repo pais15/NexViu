@@ -2,7 +2,7 @@ from Const import *
 
 @app.on_message(filters.user(int(ADMIN)) & filters.private & filters.regex(r"^👥 لیست کاربران$"))
 async def list_users(client:Client, m: Message):
-    users = await db.select('users', ['userID', 'name', 'family', 'work', 'move', 'card'])
+    users = await db.select('users', ['userID', 'name', 'username','family', 'work', 'move', 'card'])
     if not users:
         await m.reply("هیچ کاربری ثبت نشده است.")
         return
@@ -30,7 +30,7 @@ async def list_users(client:Client, m: Message):
                     name = (getattr(default_name, "username", "") or "").strip() or "کاربر"
             line = f"""🆔: `{user['userID']}` 
         نام: {name} 
-       نام کاربری: @{default_name.username if default_name and default_name.username else f'[{name}](tg://user?id={userID})'}
+       نام کاربری: @{user['username'] if user['username'] else f'[{name}](tg://user?id={userID})'}
     موجودی:     {coins} تومان
         شغل: {user['work'] or 'تعریف نشده'}
         وضعیت حرکت: {user['move'] or 'تعریف نشده'}
