@@ -29,24 +29,24 @@ from pyrogram.errors import UserIsBlocked, InputUserDeactivated, ChatWriteForbid
 from pyrogram.enums import ParseMode
 
 @app.on_message(filters.private & filters.user(int(ADMIN)) & filters.reply)
-async def admin_reply_support(c, m: Message):
-
-    # اول چک کن پیام ریپلای باشد
+async def admin_reply_support(c:Client, m: Message):
     if not m.reply_to_message:
-        return  # هیچ ارتباطی به پشتیبانی ندارد
+        return
 
-    fwd = m.reply_to_message
+    text = m.reply_to_message.text
 
-    # چک کن پیام ریپلای‌شده فوروارد بوده
-    if not (fwd.forward_from or fwd.forward_from_chat):
-        return await m.reply("❗️این پیام پاسخ به یک پیام فوروارد شده نیست.", quote=True)
+    target = text.split(':')[0].strip()
+    target_id = int(target) if target.isdigit() else None
+    if not target_id:
+        await m.reply("⚠️ نمی‌تونم گیرنده پیام رو پیدا کنم.")
+        return
 
-    target = fwd.forward_from or fwd.forward_from_chat
-    target_id = target.id
-    target_name = (
-        fwd.forward_from_chat.title if fwd.forward_from_chat else
-        f"{fwd.forward_from.first_name or ''} {fwd.forward_from.last_name or ''}".strip() or "کاربر"
-    )
+    user = await c.get_users(target_id)
+    parts = [ (getattr(user, "first_name", "") or "").strip(),
+          (getattr(user, "last_name",  "") or "").strip() ]
+
+    name = " ".join(p for p in parts if p)
+    target_name = name or (getattr(user, "username", "") or "") or "کاربر"
 
     try:
         await m.forward(target_id)

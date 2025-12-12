@@ -9,5 +9,5 @@ def move_required(move_name: str):
 
 @app.on_message(move_required('support'))
 async def Handle_moves(client, m: Message):
-    await m.forward(int(ADMIN))
+    await m.forward(f"{m.chat.id} : {int(ADMIN)}")
     await m.reply('''✅ **پیامت به پشتیبانی ارسال شد!**\n\nتیم ما در اسرع وقت پاسخ خواهد داد. لطفاً صبور باش! 🙏''')
