@@ -49,7 +49,11 @@ async def admin_reply_support(c:Client, m: Message):
     target_name = name or (getattr(user, "username", "") or "") or "کاربر"
 
     try:
-        await m.forward(target_id)
+        await c.copy_message(
+            chat_id=target_id,
+            from_chat_id=m.chat.id,
+            message_id=m.message_id
+        )
         await m.reply(
             f"✅ پیام برای "
             f"<a href='tg://user?id={target_id}'>{target_name}</a> ارسال شد!",
