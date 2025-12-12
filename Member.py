@@ -112,10 +112,3 @@ async def stats_reports_events(client: Client, m: Message):
             text += "\n".join(post_lines)
 
     await m.reply(text, parse_mode="markdown")
-
-
-@app.on_message(filters.private)
-async def handle_private_messages(client: Client, m: Message):
-    channelID = await client.get_chat('@NexViuMedia')
-
-    await m.reply(channelID.id)
