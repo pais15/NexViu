@@ -33,8 +33,7 @@ async def list_users(client:Client, m: Message):
                 for channel in channels:
                     message_lines.append(f"📢 کانال: [{channel.get('title', 'بدون عنوان')}]({channel.get('link')})")
             line = f"""🆔: `{user['userID']}` 
-        نام: {name} 
-       نام کاربری: @{user['username'] if user['username'] else f'[{name}](tg://user?id={userID})'}
+        نام: {f'[{name}](https://t.me/{default_name.username})' if default_name and default_name.username else f'[{name}](tg://user?id={userID})'}
         موجودی: {coins} تومان
         شغل: {user['work'] or 'تعریف نشده'}
         وضعیت حرکت: {user['move'] or 'تعریف نشده'}
