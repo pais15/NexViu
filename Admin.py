@@ -33,7 +33,7 @@ async def admin_reply_support(c:Client, m: Message):
     if not m.reply_to_message:
         return
 
-    text = m.reply_to_message.text
+    text = m.reply_to_message.caption or m.reply_to_message.text or ""
 
     target = text.split(':')[0].strip()
     target_id = int(target) if target.isdigit() else None
