@@ -75,6 +75,10 @@ async def search_users(client: Client, m: Message):
             if not name:
                 name = (getattr(default_name, "username", "") or "").strip() or "کاربر"
         coins = await db.select('wallet', ['coins'], {'userID': str(userID)})
+        channels = await db.select('channel', ['title', 'link'], {'userID': str(userID)})
+        if channels:
+            for channel in channels:
+                message_lines.append(f"📢 کانال: [{channel.get('title', 'بدون عنوان')}]({channel.get('link')})")
         coins = coins[0]['coins'] if coins else 0
         line = f"""🆔: `{user['userID']}`
         نام: {name}
@@ -86,5 +90,4 @@ async def search_users(client: Client, m: Message):
 
         message_lines.append(line)
     
-    await db.update('users', {'move': None}, {'userID': ADMIN})
     await m.reply("\n".join(message_lines))
