@@ -29,13 +29,18 @@ async def check_membership(client: Client, m: Message):
 
 @app.on_callback_query(filters.regex(r"^check_joined$"))
 async def check_joined(client: Client, q: CallbackQuery):
-    if not_joined_filter(None, None, q.message):
+    try:
+        member = await app.get_chat_member(CHANNEL_ID, q.from_user.id)
+        if member.status in ["left", "kicked"]:
+            await q.answer("❌ هنوز عضو کانال نشدی! لطفاً اول عضو شو.", show_alert=True)
+            return
+    except:
         await q.answer("❌ هنوز عضو کانال نشدی! لطفاً اول عضو شو.", show_alert=True)
-    else:
-        await q.answer("✅ عضویت تأیید شد!")
-        await q.message.delete()
-        await start(client, q.message)
+        return
 
+    await q.answer("✅ عضویت شما تایید شد! حالا می‌تونی از ربات استفاده کنی.", show_alert=True)
+    await q.message.delete()
+    await start(client, q.message)
 
 @app.on_message(filters.private & filters.command("start"))
 async def start(client:Client, m: Message):
