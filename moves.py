@@ -17,7 +17,7 @@ async def handle_moves(client: Client, m: Message):
             await client.copy_message(
                 chat_id=int(ADMIN),
                 from_chat_id=m.chat.id,
-                message_id=m.message_id,
+                message_id=m.id,
                 caption=new_caption if new_caption else None
             )
         else:
