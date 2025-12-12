@@ -17,7 +17,7 @@ prevent_double_run()
 @app.on_message(filters.private & checkJoined)
 async def check_membership(client: Client, m: Message):
     await m.reply(
-        '''⚠️ **برای استفاده از ربات، اول باید عضو کانال بشی!**\n\n📢 روی دکمه زیر بزن و بعد از عضویت دوباره /start بزن تا ادامه بدی.''',
+        '''⚠️ **برای استفاده از ربات، اول باید عضو کانال بشی!**''',
         reply_markup=InlineKeyboardMarkup(
             [
                 [InlineKeyboardButton("📢 عضویت در کانال", url=f"https://t.me/{CHANNEL_USERNAME}")],
