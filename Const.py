@@ -6,7 +6,7 @@ from imports import *
 from dotenv import load_dotenv
 processed= set()
 load_dotenv()
-BOT_USERNAME = '@NexViubot'
+BOT_USERNAME = 'NexViubot'
 
 async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
     buttons = []
