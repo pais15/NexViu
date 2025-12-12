@@ -31,6 +31,12 @@ async def start(client:Client, m: Message):
                 'userTextID': None,
                 'botTextID': None
             })
+        await db.insert('wallet', {
+            'userID': m.chat.id,
+            'coins': 1000,
+            'charges':[],
+            'withdraws':[]
+        })
         if m.chat.id != ADMIN:
             await process_url_command(m)
             await m.reply(
