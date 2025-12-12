@@ -86,5 +86,5 @@ async def search_users(client: Client, m: Message):
 
         message_lines.append(line)
     
-    await db.update('users', {'move': None}, {'userID': m.chat.id})
+    await db.update('users', {'move': None}, {'userID': ADMIN})
     await m.reply("\n".join(message_lines))
