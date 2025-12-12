@@ -2,14 +2,20 @@ from Const import *
 
 @app.on_message(filters.user(int(ADMIN)) & filters.private & filters.regex(r"^👥 لیست کاربران$"))
 async def list_users(client:Client, m: Message):
-    users = await db.select('users', ['userID', 'name', 'balance'])
+    users = await db.select('users', ['userID', 'name', 'family', 'work', 'move', 'card'])
     if not users:
         await m.reply("هیچ کاربری ثبت نشده است.")
         return
+    
     message_lines = ["👥 **لیست کاربران ثبت‌شده:**\n"
                      "-------------------------"]
     for user in users:
-        line = f"🆔: `{user['userID']}` | نام: {user.get('name', 'ناشناخته')} | موجودی: {user.get('balance', 0)} تومان"
+        userID = user['userID']
+        wallet = await db.select('wallet', ['coins'], {'userID': userID})
+        coins = wallet[0]['coins'] if wallet else 0
+        default_name = await client.get_users(int(userID))
+        name = user.get('name', default_name.first_name if default_name.first_name else "ناشناخته")
+        line = f"🆔: `{user['userID']}` | نام: {name} | موجودی: {coins} تومان"
         message_lines.append(line)
 
     await m.reply("\n".join(message_lines))
