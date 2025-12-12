@@ -8,6 +8,6 @@ def move_required(move_name: str):
     return filters.create(checker)
 
 @app.on_message(move_required('support'))
-async def Handle_moves(client:client, m: Message):
+async def Handle_moves(client:Client, m: Message):
     await client.send_message(int(ADMIN), f"{m.chat.id} : {m.text}")
     await m.reply('''✅ **پیامت به پشتیبانی ارسال شد!**\n\nتیم ما در اسرع وقت پاسخ خواهد داد. لطفاً صبور باش! 🙏''')
