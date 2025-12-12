@@ -58,7 +58,7 @@ not_bot = filters.create(not_bot_message)
 dont_exists_filter = filters.create(_dont_exists_filter)
 exists_filter = filters.create(_exists_filter)
 
-ADMIN = "7979574575"  # بهتره int باشه ولی فعلاً string نگه داشتم
+ADMIN = "7979574575" 
 
 app = Client(
     "NexViu",

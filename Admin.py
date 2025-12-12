@@ -9,16 +9,42 @@ async def list_users(client:Client, m: Message):
     
     message_lines = ["👥 **لیست کاربران ثبت‌شده:**\n"
                      "-------------------------"]
-    for user in users:
-        userID = user['userID']
-        wallet = await db.select('wallet', ['coins'], {'userID': userID})
-        coins = wallet[0]['coins'] if wallet else 0
-        default_name = await client.get_users(int(userID))
-        name = user.get('name', default_name.first_name if default_name.first_name else "ناشناخته")
-        line = f"🆔: `{user['userID']}` | نام: {name} | موجودی: {coins} تومان"
-        message_lines.append(line)
+    if len(users) < 5:
+        end = 0
+    else:
+        end = 5
+    for i in range(len(users), end, -1):
+        if i < len(users):
+            user = users[i]
+            userID = user['userID']
+            wallet = await db.select('wallet', ['coins'], {'userID': userID})
+            coins = wallet[0]['coins'] if wallet else 0
+            default_name = await client.get_users(int(userID))
+            if user.get('name') and user.get('family'):
+                name = f"{user['name']} {user['family']}"
+            elif default_name:
+                parts = [ (getattr(default_name, "first_name", "") or "").strip(),
+                        (getattr(default_name, "last_name",  "") or "").strip() ]
+                name = " ".join(p for p in parts if p)
+                if not name:
+                    name = (getattr(default_name, "username", "") or "").strip() or "کاربر"
+            line = f"""🆔: `{user['userID']}` 
+        نام: {name} 
+       نام کاربری: @{default_name.username if default_name and default_name.username else f'[{name}](tg://user?id={userID})'}
+    موجودی:     {coins} تومان
+        شغل: {user['work'] or 'تعریف نشده'}
+        وضعیت حرکت: {user['move'] or 'تعریف نشده'}
+        کارت بانکی: {user['card'] or 'تعریف نشده'}"""
+            message_lines.append(line)
+    text = "\n".join(message_lines)
+    text += '\n\nکاربر مورد نظر یافت نشد؟ یوزرنیمش و وارد کن: '
+    await db.update('users', {'move': 'search_users'}, {'userID': m.chat.id})
+    markup = ReplyKeyboardMarkup(
+        [[KeyboardButton('🏠 خانه')]],
+        resize_keyboard=True
+    )
+    await m.reply(text, reply_markup=markup)
 
-    await m.reply("\n".join(message_lines))
 
 @app.on_message(filters.user(int(ADMIN)) & filters.private & filters.regex(r"^🛑 حذف کاربران متخلف$"))
 async def delete_offending_users(client:Client, m: Message):
