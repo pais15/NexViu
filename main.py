@@ -82,10 +82,16 @@ async def go_home(client:Client, m: Message):
     name = user_data[0]['name'] if user_data else None
     name = name if name else "دوست عزیز"
     await db.update('users', {'move': None}, {'userID': m.chat.id})
-    await m.reply(
-            f'''🌞 **سلام {name}!**\n\n🚀 **امروز چه برنامه‌ای داری؟**\n👇 **یه گزینه انتخاب کن!**''',
-            reply_markup=await get_markup(m.chat.id)
+    if m.chat.id == int(ADMIN):
+        await m.reply(
+            '''👑 **سلام رئیس NexViu!**\n\n🔧 **آماده مدیریت کاربرا و تنظیم ربات؟**\n🚀 **بزن بریم!**''',
+            reply_markup=admin_markup,
         )
+    else:
+        await m.reply(
+                f'''🌞 **سلام {name}!**\n\n🚀 **امروز چه برنامه‌ای داری؟**\n👇 **یه گزینه انتخاب کن!**''',
+                reply_markup=await get_markup(m.chat.id)
+            )
 
 from Member import *
 from Admin import *
