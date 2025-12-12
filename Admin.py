@@ -52,7 +52,7 @@ async def admin_reply_support(c:Client, m: Message):
         await c.copy_message(
             chat_id=target_id,
             from_chat_id=m.chat.id,
-            message_id=m.message_id
+            message_id=m.id
         )
         await m.reply(
             f"✅ پیام برای "
