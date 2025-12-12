@@ -15,7 +15,7 @@ def prevent_double_run():
 prevent_double_run()
 
 
-@app.on_message(filters.private & filters.command("start") & checkSend)
+@app.on_message(filters.private & filters.command("start"))
 async def start(client, m: Message):
     m.chat.id = str(m.chat.id)
     if not await db.exists('users', {'userID': m.chat.id}):
@@ -64,7 +64,7 @@ async def start(client, m: Message):
         )
 
 
-@app.on_message(filters.private &  ~filters.command("start") & dont_exists_filter & not_bot & checkSend)
+@app.on_message(filters.private &  ~filters.command("start") & dont_exists_filter & not_bot)
 async def dont_exists(client, m:Message):
     await m.reply(
         '''🎉 **خوش اومدی! ولی...**
@@ -73,7 +73,7 @@ async def dont_exists(client, m:Message):
     )
 
 
-@app.on_message(filters.private & exists_filter & filters.regex(r"^🏠 خانه$") & checkSend)
+@app.on_message(filters.private & exists_filter & filters.regex(r"^🏠 خانه$"))
 async def go_home(client, m: Message):
     m.chat.id = str(m.chat.id)
     user_data = await db.select('users', ['move', 'name'], {'userID': m.chat.id})
@@ -90,7 +90,7 @@ from Member import *
 from Admin import *
 from moves import *
 
-@app.on_message(filters.private &  exists_filter & not_bot & checkSend)
+@app.on_message(filters.private &  exists_filter & not_bot)
 async def generic_handler(client, m: Message):
     await m.reply('''🤔 **این دستور رو ندارم!**
 

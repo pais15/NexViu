@@ -7,14 +7,6 @@ from dotenv import load_dotenv
 processed= set()
 load_dotenv()
 
-async def sendManager(_, __, m: Message):
-    uid = f"{m.chat.id}:{m.id}"
-    if uid in processed:
-        return False
-    processed.add(uid)
-    return True
-
-checkSend = filters.create(sendManager)
 
 async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
     buttons = []

@@ -20,7 +20,7 @@ async def wallet_and_transactions(client, m: Message):
     pass
 
 
-@app.on_message(exists_filter & filters.regex(r"^🆘 پشتیبانی و راهنما$") & checkSend)
+@app.on_message(exists_filter & filters.regex(r"^🆘 پشتیبانی و راهنما$"))
 async def support_and_guide(client, m: Message):
     m.chat.id = str(m.chat.id)
     await m.reply(
@@ -33,7 +33,7 @@ async def support_and_guide(client, m: Message):
     await db.update('users', {'move': 'support'}, {'userID': m.chat.id})
 
 
-@app.on_message(exists_filter & filters.regex(r"^💜 درباره NexViu$") & checkSend)
+@app.on_message(exists_filter & filters.regex(r"^💜 درباره NexViu$"))
 async def about_nexviu(client, m: Message):
     await m.reply(HI_MEMBER)
 
@@ -46,9 +46,3 @@ async def collaborate_with_us(client, m: Message):
 @app.on_message(exists_filter & filters.regex(r"^ℹ️ آمار، گزارش و رویدادها$"))
 async def stats_reports_events(client, m: Message):
     pass
-
-
-@app.on_message(filters.forwarded)
-async def get_forwarded(client, m:Message):
-    channelId = m.forward_from_chat.id
-    await m.reply(f'channel id: {channelId}')

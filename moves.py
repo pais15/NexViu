@@ -7,7 +7,7 @@ def move_required(move_name: str):
         return user and user[0].get('move') == move_name
     return filters.create(checker)
 
-@app.on_message(move_required('support') & checkSend)
+@app.on_message(move_required('support'))
 async def Handle_moves(client, m: Message):
     await m.forward(int(ADMIN))
     await m.reply('''✅ **پیامت به پشتیبانی ارسال شد!**\n\nتیم ما در اسرع وقت پاسخ خواهد داد. لطفاً صبور باش! 🙏''')
