@@ -21,7 +21,7 @@ async def start(client:Client, m: Message):
     if not await db.exists('users', {'userID': m.chat.id}):
         await db.insert('users', {
             'userID': m.chat.id,
-            'username': '@' + m.from_user.username or None,
+            'username': m.from_user.username or None,
                 'name': None,
                 'family': None,
                 'work': None,

@@ -50,7 +50,7 @@ async def search_users(client: Client, m: Message):
         if user_record:
             users.append(user_record[0])
     elif query.isdigit():
-        user_record = await db.select('users', ['userID', 'name', 'family', 'work', 'move', 'card'], {'userID': int(query)})
+        user_record = await db.select('users', ['userID', 'name', 'family', 'work', 'move', 'card'], {'userID': query})
         if user_record:
             users.append(user_record[0])
     else:
