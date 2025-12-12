@@ -26,7 +26,7 @@ async def start(client:Client, m: Message):
                 'family': None,
                 'work': None,
                 'move': None,
-                'role': 'member',
+                'role': 'member' if m.chat.id != ADMIN else 'admin',
                 'card': None,
                 'userTextID': None,
                 'botTextID': None
