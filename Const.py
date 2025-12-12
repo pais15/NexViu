@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 processed= set()
 load_dotenv()
 BOT_USERNAME = 'NexViubot'
+CHANNEL_ID = -1003167798638
+CHANNEL_USERNAME = 'NexViuMedia'
 
 async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
     buttons = []
@@ -53,6 +55,15 @@ async def _exists_filter(_, __, m):
 
 def not_bot_message(_, __, m: Message):
     return not m.from_user.is_bot
+
+async def not_joined_filter(_, __, m: Message):
+    try:
+        member = await app.get_chat_member(CHANNEL_ID, m.from_user.id)
+        return member.status in ["left", "kicked"]
+    except:
+        return True
+    
+checkJoined = filters.create(not_joined_filter)
 
 not_bot = filters.create(not_bot_message)
 dont_exists_filter = filters.create(_dont_exists_filter)

@@ -14,6 +14,25 @@ def prevent_double_run():
 
 prevent_double_run()
 
+@app.on_message(filters.private & checkJoined)
+async def check_membership(client: Client, m: Message):
+    await m.reply(
+        '''⚠️ **برای استفاده از ربات، اول باید عضو کانال بشی!**\n\n📢 روی دکمه زیر بزن و بعد از عضویت دوباره /start بزن تا ادامه بدی.''',
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [InlineKeyboardButton("📢 عضویت در کانال", url=f"https://t.me/{CHANNEL_USERNAME}")],
+                [InlineKeyboardButton("✅ من عضو شدم", callback_data="check_joined")]
+            ]
+        )
+    )
+
+
+@app.on_callback_query(filters.regex(r"^check_joined$"))
+async def check_joined(client: Client, q: CallbackQuery):
+    await q.answer("✅ عضویت تأیید شد!")
+    await q.message.delete()
+    await start(client, q.message)
+
 
 @app.on_message(filters.private & filters.command("start"))
 async def start(client:Client, m: Message):
