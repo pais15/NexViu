@@ -61,8 +61,7 @@ async def search_users(client: Client, m: Message):
         await m.reply("❌ کاربری با این مشخصات پیدا نشد.")
         return
 
-    message_lines = ["👥 **لیست کاربران یافت‌شده:**\n",
-                     "-------------------------"]
+    message_lines = ["👥 **لیست کاربران یافت‌شده:**\n"]
     for user in users:
         userID = user['userID']
         default_name = await client.get_users(int(userID))

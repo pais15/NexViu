@@ -7,8 +7,7 @@ async def list_users(client:Client, m: Message):
         await m.reply("هیچ کاربری ثبت نشده است.")
         return
     
-    message_lines = ["👥 **لیست کاربران ثبت‌شده:**\n",
-                     "-------------------------"]
+    message_lines = ["👥 **لیست کاربران ثبت‌شده:**\n"]
     if len(users) < 5:
         end = 0
     else:
