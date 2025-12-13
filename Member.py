@@ -111,4 +111,4 @@ async def stats_reports_events(client: Client, m: Message):
         if post_lines:
             text += "\n".join(post_lines)
 
-    await m.reply(text, parse_mode="markdown")
+    await m.reply(text)
