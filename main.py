@@ -92,7 +92,7 @@ async def force_join(client: Client, m: Message):
 @app.on_callback_query(filters.regex("^check_join$"))
 async def check_join_callback(client: Client, q: CallbackQuery):
     try:
-        member = await app.get_chat_member(CHANNEL_ID, q.from_user.id)
+        member = await app.get_chat_member(CHANNEL_USERNAME, q.from_user.id)
 
         if member.status in ("left", "kicked"):
             await q.answer("❌ هنوز عضو کانال نشدی!", show_alert=True)
