@@ -70,18 +70,47 @@ async def start(client:Client, m: Message):
         )
 
 
-@app.on_message(filters.private &  force_join_filter & not_bot)
-async def force_join_handler(client:Client, m:Message):
+@app.on_message(
+    filters.private &
+    exists_filter &
+    not_joined_filter
+)
+async def force_join(client: Client, m: Message):
     await m.reply(
-        f'''⚠️ **برای استفاده از ربات، اول باید عضو کانال ما بشی!**\n\n📢 [کانال NexViu Media](https://t.me{CHANNEL_USERNAME})\n\n🔄 بعد از عضویت، دوباره /start بزن تا ادامه بدی.''',
-        reply_markup=ReplyKeyboardMarkup(
-            [[KeyboardButton('🏠 خانه')]],
-            resize_keyboard=True
-        ),
-        parse_mode="markdown"
+        "⚠️ **برای استفاده از ربات باید عضو کانال ما باشید**\n\n"
+        "📢 بعد از عضویت، روی دکمه زیر بزنید:",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [InlineKeyboardButton("📢 عضویت در کانال", url=f"https://t.me/{CHANNEL_USERNAME}")],
+                [InlineKeyboardButton("✅ عضو شدم", callback_data="check_join")]
+            ]
+        )
     )
 
-    
+
+
+@app.on_callback_query(filters.regex("^check_join$"))
+async def check_join_callback(client: Client, q: CallbackQuery):
+    try:
+        member = await app.get_chat_member(CHANNEL_ID, q.from_user.id)
+
+        if member.status in ("left", "kicked"):
+            await q.answer("❌ هنوز عضو کانال نشدی!", show_alert=True)
+            return
+
+        await q.answer("✅ عضویت تایید شد!", show_alert=True)
+        await q.message.delete()
+
+        # منوی اصلی
+        await q.message.chat.send_message(
+            "🎉 خوش اومدی! حالا می‌تونی از ربات استفاده کنی 👇",
+            reply_markup=await get_markup(str(q.from_user.id))
+        )
+
+    except:
+        await q.answer("❌ خطا در بررسی عضویت", show_alert=True)
+
+
 @app.on_message(filters.private &  ~filters.command("start") & dont_exists_filter & not_bot)
 async def dont_exists(client:Client, m:Message):
     await m.reply(

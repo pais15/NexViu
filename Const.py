@@ -55,14 +55,15 @@ async def _exists_filter(_, __, m):
 def not_bot_message(_, __, m: Message):
     return not m.from_user.is_bot
 
-async def force_join(_, __, m:Message):
+async def not_joined(_, __, m: Message):
     try:
-        member = await app.get_chat_member(CHANNEL_USERNAME, m.chat.id)
-        return member.status in ["member", "administrator", "creator"]
+        member = await app.get_chat_member(CHANNEL_ID, m.from_user.id)
+        return member.status in ("left", "kicked")
     except:
-        return False
+        return True
 
-force_join_filter = filters.create(force_join)
+
+not_joined_filter = filters.create(not_joined)
 not_bot = filters.create(not_bot_message)
 dont_exists_filter = filters.create(_dont_exists_filter)
 exists_filter = filters.create(_exists_filter)
