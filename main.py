@@ -34,13 +34,13 @@ async def check_joined(client: Client, q: CallbackQuery):
         if member.status in ["left", "kicked"]:
             await q.answer("❌ هنوز عضو کانال نشدی! لطفاً اول عضو شو.", show_alert=True)
             return
+        else:
+            await q.answer("✅ عضویت شما تایید شد! حالا می‌تونی از ربات استفاده کنی.", show_alert=True)
+            await q.message.delete()
+            await start(client, q.message)
     except:
         await q.answer("❌ هنوز عضو کانال نشدی! لطفاً اول عضو شو.", show_alert=True)
         return
-
-    await q.answer("✅ عضویت شما تایید شد! حالا می‌تونی از ربات استفاده کنی.", show_alert=True)
-    await q.message.delete()
-    await start(client, q.message)
 
 @app.on_message(filters.private & filters.command("start"))
 async def start(client:Client, m: Message):

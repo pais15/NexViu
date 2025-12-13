@@ -57,14 +57,8 @@ def not_bot_message(_, __, m: Message):
     return not m.from_user.is_bot
 
 async def not_joined_filter(_, __, m: Message):
-    if m.chat.type in ["private", "bot"]:
-        return True
-    try:
-        member = await app.get_chat_member(CHANNEL_USERNAME, m.from_user.id)
-        return member.status in ["left", "kicked"]
-    except Exception as e:
-        print(f"خطا در بررسی عضویت کاربر {m.from_user.id}: {e}")
-        return True
+    member = await app.get_chat_member(CHANNEL_USERNAME, m.from_user.id)
+    return member.status in ["left", "kicked"]
     
 checkJoined = filters.create(not_joined_filter)
 
