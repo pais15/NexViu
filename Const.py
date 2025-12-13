@@ -46,7 +46,6 @@ async def get_markup(user_id: int) -> ReplyKeyboardMarkup:
         print(f"خطا در ساخت منو برای کاربر {user_id}: {e}")
         return ReplyKeyboardMarkup([[KeyboardButton('🏠 خانه')]], resize_keyboard=True)
 
-
 async def _dont_exists_filter(_, __, m):
     return not await db.exists("users", {"userID": str(m.from_user.id)})
 
@@ -56,12 +55,14 @@ async def _exists_filter(_, __, m):
 def not_bot_message(_, __, m: Message):
     return not m.from_user.is_bot
 
-async def not_joined_filter(_, __, m: Message):
-    member = await app.get_chat_member(CHANNEL_USERNAME, m.from_user.id)
-    return member.status in ["left", "kicked"]
-    
-checkJoined = filters.create(not_joined_filter)
+async def force_join(_, __, m:Message):
+    try:
+        member = await app.get_chat_member(CHANNEL_USERNAME, m.chat.id)
+        return member.status in ["member", "administrator", "creator"]
+    except:
+        return False
 
+force_join_filter = filters.create(force_join)
 not_bot = filters.create(not_bot_message)
 dont_exists_filter = filters.create(_dont_exists_filter)
 exists_filter = filters.create(_exists_filter)

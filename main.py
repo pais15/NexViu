@@ -12,35 +12,7 @@ def prevent_double_run():
         print("❌ Another instance detected! Exiting...")
         sys.exit()
 
-prevent_double_run()
-
-@app.on_message(filters.private & checkJoined)
-async def check_membership(client: Client, m: Message):
-    await m.reply(
-        '''⚠️ **برای استفاده از ربات، اول باید عضو کانال بشی!**''',
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [InlineKeyboardButton("📢 عضویت در کانال", url=f"https://t.me/{CHANNEL_USERNAME}")],
-                [InlineKeyboardButton("✅ من عضو شدم", callback_data="check_joined")]
-            ]
-        )
-    )
-
-
-@app.on_callback_query(filters.regex(r"^check_joined$"))
-async def check_joined(client: Client, q: CallbackQuery):
-    try:
-        member = await app.get_chat_member(CHANNEL_ID, q.from_user.id)
-        if member.status in ["left", "kicked"]:
-            await q.answer("❌ هنوز عضو کانال نشدی! لطفاً اول عضو شو.", show_alert=True)
-            return
-        else:
-            await q.answer("✅ عضویت شما تایید شد! حالا می‌تونی از ربات استفاده کنی.", show_alert=True)
-            await q.message.delete()
-            await start(client, q.message)
-    except:
-        await q.answer("❌ هنوز عضو کانال نشدی! لطفاً اول عضو شو.", show_alert=True)
-        return
+prevent_double_run()   
 
 @app.on_message(filters.private & filters.command("start"))
 async def start(client:Client, m: Message):
@@ -98,6 +70,18 @@ async def start(client:Client, m: Message):
         )
 
 
+@app.on_message(filters.private &  force_join_filter & not_bot)
+async def force_join_handler(client:Client, m:Message):
+    await m.reply(
+        f'''⚠️ **برای استفاده از ربات، اول باید عضو کانال ما بشی!**\n\n📢 [کانال NexViu Media](https://t.me{CHANNEL_USERNAME})\n\n🔄 بعد از عضویت، دوباره /start بزن تا ادامه بدی.''',
+        reply_markup=ReplyKeyboardMarkup(
+            [[KeyboardButton('🏠 خانه')]],
+            resize_keyboard=True
+        ),
+        parse_mode="markdown"
+    )
+
+    
 @app.on_message(filters.private &  ~filters.command("start") & dont_exists_filter & not_bot)
 async def dont_exists(client:Client, m:Message):
     await m.reply(
