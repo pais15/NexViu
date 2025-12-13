@@ -107,7 +107,8 @@ async def check_join_callback(client: Client, q: CallbackQuery):
             reply_markup=await get_markup(str(q.from_user.id))
         )
 
-    except:
+    except Exception as e:
+        print("Error in check_join_callback:", e)
         await q.answer("❌ خطا در بررسی عضویت", show_alert=True)
 
 
